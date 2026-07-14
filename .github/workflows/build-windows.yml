@@ -10,12 +10,17 @@ jobs:
     runs-on: windows-latest
     steps:
       - uses: actions/checkout@v4
+      - name: Download OpenCV Windows prebuilt
+        working-directory: /tmp
+        run: |
+          curl -L -o opencv-windows.zip https://github.com/opencv/opencv/releases/download/4.13.0/opencv-4.13.0-windows-msvc2022.zip
+          7z x opencv-windows.zip -o/tmp/opencv
       - name: Build Windows (x86_64)
         run: |
           mkdir build-windows
           cd build-windows
-          cmake .. -DCMAKE_BUILD_TYPE=Release
-          cmake --build . --config Release
+          cmake .. -DINKSI_USE_OPENCV=ON -DOpenCV_DIR=/tmp/opencv/opencv/build
+          cmake --build . --config Release -j
       - uses: actions/upload-artifact@v4
         with:
           name: inksi_image-windows-x86_64

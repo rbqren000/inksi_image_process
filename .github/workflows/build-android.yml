@@ -17,6 +17,11 @@ jobs:
       - uses: nttld/setup-ndk@v1
         with:
           ndk-version: r27
+      - name: Download OpenCV Android SDK
+        working-directory: /tmp
+        run: |
+          wget -q https://github.com/opencv/opencv/releases/download/4.13.0/opencv-4.13.0-android-sdk.zip
+          unzip -q opencv-4.13.0-android-sdk.zip
       - name: Build for arm64-v8a
         run: |
           mkdir build-android && cd build-android
@@ -24,10 +29,11 @@ jobs:
             -DCMAKE_TOOLCHAIN_FILE=$ANDROID_NDK_HOME/build/cmake/android.toolchain.cmake \
             -DANDROID_ABI=arm64-v8a \
             -DANDROID_PLATFORM=android-21 \
+            -DOpenCV_DIR=/tmp/OpenCV-android-sdk/sdk/native/jni \
+            -DINKSI_USE_OPENCV=ON \
             -DCMAKE_BUILD_TYPE=Release
-          cmake --build .
-      - name: Upload artifact
-        uses: actions/upload-artifact@v4
+          cmake --build . -j$(nproc)
+      - uses: actions/upload-artifact@v4
         with:
           name: inksi_image-android-arm64-v8a
           path: build-android/libinksi_image.a

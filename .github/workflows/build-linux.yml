@@ -5,18 +5,56 @@ on:
     branches: [main]
   workflow_dispatch:
 
+env:
+  OPENCV_VERSION: 4.13.0
+
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Install deps
-        run: sudo apt-get update && sudo apt-get install -y libopencv-dev
-      - name: Build Linux (x86_64)
+
+      - name: Install build dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y cmake build-essential wget unzip
+
+      - name: Cache OpenCV build
+        id: cache-opencv
+        uses: actions/cache@v4
+        with:
+          path: /tmp/opencv-install
+          key: opencv-${{ env.OPENCV_VERSION }}-linux-x86_64
+
+      - name: Build OpenCV from source
+        if: steps.cache-opencv.outputs.cache-hit != 'true'
+        working-directory: /tmp
+        run: |
+          wget -q https://github.com/opencv/opencv/archive/refs/tags/${{ env.OPENCV_VERSION }}.zip
+          unzip -q ${{ env.OPENCV_VERSION }}.zip
+          mkdir opencv-build && cd opencv-build
+          cmake ../opencv-${{ env.OPENCV_VERSION }} \
+            -DCMAKE_BUILD_TYPE=Release \
+            -DCMAKE_INSTALL_PREFIX=/tmp/opencv-install \
+            -DBUILD_EXAMPLES=OFF -DBUILD_TESTS=OFF -DBUILD_PERF_TESTS=OFF \
+            -DBUILD_opencv_apps=OFF -DBUILD_JAVA=OFF -DBUILD_PYTHON=OFF \
+            -DBUILD_opencv_js=OFF -DBUILD_opencv_ts=OFF \
+            -DWITH_IPP=OFF -DWITH_TBB=OFF -DWITH_OPENMP=OFF \
+            -DWITH_OPENCL=OFF -DWITH_CUDA=OFF -DWITH_FFMPEG=OFF \
+            -DWITH_GSTREAMER=OFF -DWITH_V4L=OFF -DWITH_GTK=OFF -DWITH_QT=OFF \
+            -DENABLE_PRECOMPILED_HEADERS=OFF
+          cmake --build . -j$(nproc)
+          cmake --install .
+
+      - name: Build inksi_image
         run: |
           mkdir build-linux && cd build-linux
-          cmake .. -DCMAKE_BUILD_TYPE=Release
-          cmake --build .
+          cmake .. \
+            -DCMAKE_BUILD_TYPE=Release \
+            -DINKSI_USE_OPENCV=ON \
+            -DOpenCV_DIR=/tmp/opencv-install/lib/cmake/opencv4
+          cmake --build . -j$(nproc)
+
       - uses: actions/upload-artifact@v4
         with:
           name: inksi_image-linux-x86_64

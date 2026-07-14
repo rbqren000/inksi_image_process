@@ -10,6 +10,11 @@ jobs:
     runs-on: macos-latest
     steps:
       - uses: actions/checkout@v4
+      - name: Download OpenCV iOS framework
+        working-directory: /tmp
+        run: |
+          wget -q https://github.com/opencv/opencv/releases/download/4.13.0/opencv-4.13.0-ios-framework.zip
+          unzip -q opencv-4.13.0-ios-framework.zip
       - name: Build for iOS (arm64)
         run: |
           mkdir build-ios && cd build-ios
@@ -17,8 +22,9 @@ jobs:
             -G Xcode \
             -DCMAKE_SYSTEM_NAME=iOS \
             -DCMAKE_OSX_ARCHITECTURES=arm64 \
-            -DCMAKE_BUILD_TYPE=Release
-          cmake --build .
+            -DOpenCV_DIR=/tmp/opencv2.framework \
+            -DINKSI_USE_OPENCV=ON
+          cmake --build . --config Release -j$(sysctl -n hw.ncpu)
       - uses: actions/upload-artifact@v4
         with:
           name: inksi_image-ios-arm64
