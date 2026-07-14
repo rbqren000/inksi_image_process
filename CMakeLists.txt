@@ -4,6 +4,11 @@ project(inksi_image_process VERSION 1.0.0 LANGUAGES CXX)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
+# MSVC: force static CRT (/MT) to match OpenCV static build
+if(MSVC)
+    set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
+endif()
+
 option(INKSI_USE_OPENCV "Use OpenCV for image processing" ON)
 
 if(INKSI_USE_OPENCV)
