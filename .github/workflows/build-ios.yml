@@ -32,8 +32,13 @@ jobs:
         with:
           name: inksi_image-ios-arm64
           path: build-ios/libinksi_image.a
+      - name: Rename for Release
+        if: startsWith(github.ref, 'refs/tags/')
+        run: |
+          cp build-ios/libinksi_image.a inksi_image-ios-arm64.a
+        shell: bash
       - name: Upload to Release
         if: startsWith(github.ref, 'refs/tags/')
         uses: softprops/action-gh-release@v2
         with:
-          files: build-ios/libinksi_image.a
+          files: inksi_image-ios-arm64.a
