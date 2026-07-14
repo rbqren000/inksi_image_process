@@ -44,4 +44,5 @@ cmake "$SCRIPT_DIR" \
     -DINKSI_USE_OPENCV=ON \
     -DCMAKE_BUILD_TYPE=Release
 cmake --build . -j"$(sysctl -n hw.ncpu 2>/dev/null || nproc)"
-echo "Done: $(pwd)/libinksi_image.a"
+cp libinksi_image.a "$SCRIPT_DIR/inksi_image-android-arm64-v8a.a"
+echo "Done: $SCRIPT_DIR/inksi_image-android-arm64-v8a.a ($(du -h "$SCRIPT_DIR/inksi_image-android-arm64-v8a.a" | cut -f1))"

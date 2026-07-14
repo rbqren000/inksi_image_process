@@ -21,8 +21,8 @@ jobs:
         id: cache-opencv
         uses: actions/cache@v4
         with:
-          path: /tmp/opencv-install
-          key: opencv-${{ env.OPENCV_VERSION }}-macos-x86_64
+          path: /tmp/opencv-install-universal
+          key: opencv-${{ env.OPENCV_VERSION }}-macos-universal
 
       - name: Build OpenCV from source
         if: steps.cache-opencv.outputs.cache-hit != 'true'
@@ -33,7 +33,8 @@ jobs:
           mkdir opencv-build && cd opencv-build
           cmake ../opencv-${{ env.OPENCV_VERSION }} \
             -DCMAKE_BUILD_TYPE=Release \
-            -DCMAKE_INSTALL_PREFIX=/tmp/opencv-install \
+            -DCMAKE_INSTALL_PREFIX=/tmp/opencv-install-universal \
+            -DCMAKE_OSX_ARCHITECTURES="arm64;x86_64" \
             -DBUILD_EXAMPLES=OFF -DBUILD_TESTS=OFF -DBUILD_PERF_TESTS=OFF \
             -DBUILD_opencv_apps=OFF -DBUILD_JAVA=OFF -DBUILD_PYTHON=OFF \
             -DBUILD_opencv_js=OFF -DBUILD_opencv_ts=OFF \
@@ -49,8 +50,9 @@ jobs:
           mkdir build-macos && cd build-macos
           cmake .. \
             -DCMAKE_BUILD_TYPE=Release \
+            -DCMAKE_OSX_ARCHITECTURES="arm64;x86_64" \
             -DINKSI_USE_OPENCV=ON \
-            -DOpenCV_DIR=/tmp/opencv-install/lib/cmake/opencv4
+            -DOpenCV_DIR=/tmp/opencv-install-universal/lib/cmake/opencv4
           cmake --build . -j$(sysctl -n hw.ncpu)
 
       - uses: actions/upload-artifact@v4

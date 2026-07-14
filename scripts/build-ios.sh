@@ -30,7 +30,7 @@ cmake "$SCRIPT_DIR" \
     -G Xcode \
     -DCMAKE_SYSTEM_NAME=iOS \
     -DCMAKE_OSX_ARCHITECTURES=arm64 \
-    -DOpenCV_DIR=$OPENCV_DIR \
+    -DOpenCV_DIR="$OPENCV_DIR" \
     -DINKSI_USE_OPENCV=ON
 cmake --build . --config Release -j"$(sysctl -n hw.ncpu)"
 
