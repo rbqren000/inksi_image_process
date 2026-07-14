@@ -32,6 +32,7 @@ jobs:
           unzip -q ${{ env.OPENCV_VERSION }}.zip
           mkdir opencv-build && cd opencv-build
           cmake ../opencv-${{ env.OPENCV_VERSION }} \
+            -DWITH_KLEIDICV=OFF \
             -DBUILD_SHARED_LIBS=OFF \
             -DCMAKE_BUILD_TYPE=Release \
             -DCMAKE_INSTALL_PREFIX=/tmp/opencv-install-universal \
