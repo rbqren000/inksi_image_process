@@ -13,6 +13,9 @@
 
 name: Build OHOS (manual)
 on:
+  push:
+    branches: [main]
+    tags: ['v*']
   workflow_dispatch:
 jobs:
   build:
