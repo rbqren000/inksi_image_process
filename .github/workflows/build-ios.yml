@@ -48,7 +48,7 @@ jobs:
           cmake --install . --config Release
       - name: Build inksi_image for iOS arm64
         run: |
-          mkdir build-ios && cd build-ios
+          mkdir -p build-ios && cd build-ios
           cmake .. \
             -G Xcode \
             -DCMAKE_SYSTEM_NAME=iOS \

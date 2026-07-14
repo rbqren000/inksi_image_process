@@ -56,7 +56,7 @@ jobs:
 
       - name: Build inksi_image
         run: |
-          mkdir build-linux && cd build-linux
+          mkdir -p build-linux && cd build-linux
           cmake .. \
             -DCMAKE_BUILD_TYPE=Release \
             -DINKSI_USE_OPENCV=ON \

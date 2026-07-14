@@ -56,7 +56,7 @@ jobs:
 
       - name: Build inksi_image (${{ matrix.arch }})
         run: |
-          mkdir build-macos-${{ matrix.arch }} && cd build-macos-${{ matrix.arch }}
+          mkdir -p build-macos-${{ matrix.arch }} && cd build-macos-${{ matrix.arch }}
           cmake .. \
             -DCMAKE_BUILD_TYPE=Release \
             -DCMAKE_OSX_ARCHITECTURES=${{ matrix.arch }} \
