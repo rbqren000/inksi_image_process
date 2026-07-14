@@ -1,0 +1,25 @@
+name: Build iOS
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build for iOS (arm64)
+        run: |
+          mkdir build-ios && cd build-ios
+          cmake .. \
+            -G Xcode \
+            -DCMAKE_SYSTEM_NAME=iOS \
+            -DCMAKE_OSX_ARCHITECTURES=arm64 \
+            -DCMAKE_BUILD_TYPE=Release
+          cmake --build .
+      - uses: actions/upload-artifact@v4
+        with:
+          name: inksi_image-ios-arm64
+          path: build-ios/libinksi_image.a

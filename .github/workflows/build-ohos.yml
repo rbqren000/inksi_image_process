@@ -1,0 +1,21 @@
+# OHOS 需本地 DevEco 环境编译，无法在 GitHub CI 执行。
+# 使用方法：
+#   1. 在本机 DevEco 中打开此 CMake 项目
+#   2. 配置 OHOS NDK 路径
+#   3. 执行:
+#      mkdir build-ohos && cd build-ohos
+#      cmake .. \
+#        -DCMAKE_TOOLCHAIN_FILE=$OHOS_NDK_HOME/build/cmake/ohos.toolchain.cmake \
+#        -DOHOS_ARCH=arm64-v8a \
+#        -DCMAKE_BUILD_TYPE=Release
+#      cmake --build .
+#   4. 产物: build-ohos/libinksi_image.so
+
+name: Build OHOS (manual)
+on:
+  workflow_dispatch:
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "OHOS build requires local DevEco environment. See comment in this file."
