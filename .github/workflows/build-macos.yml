@@ -36,6 +36,7 @@ jobs:
           mkdir opencv-build-${{ matrix.arch }} && cd opencv-build-${{ matrix.arch }}
           cmake ../opencv-${{ env.OPENCV_VERSION }} \
             -DBUILD_SHARED_LIBS=OFF \
+            -DWITH_KLEIDICV=OFF \
             -DCMAKE_BUILD_TYPE=Release \
             -DCMAKE_OSX_ARCHITECTURES=${{ matrix.arch }} \
             -DCMAKE_INSTALL_PREFIX=/tmp/opencv-macos-${{ matrix.arch }} \
