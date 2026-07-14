@@ -57,8 +57,11 @@ jobs:
         with:
           name: inksi_image-macos-universal
           path: build-macos/libinksi_image.dylib
+      - name: Rename for Release
+        if: startsWith(github.ref, 'refs/tags/')
+        run: cp build-macos/libinksi_image.dylib inksi_image-macos-universal.dylib
       - name: Upload to Release
         if: startsWith(github.ref, 'refs/tags/')
         uses: softprops/action-gh-release@v2
         with:
-          files: build-macos/libinksi_image.dylib
+          files: inksi_image-macos-universal.dylib

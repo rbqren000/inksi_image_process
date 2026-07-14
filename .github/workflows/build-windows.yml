@@ -34,8 +34,13 @@ jobs:
         with:
           name: inksi_image-windows-x86_64
           path: build-windows/Release/inksi_image.dll
+      - name: Rename for Release
+        if: startsWith(github.ref, 'refs/tags/')
+        shell: pwsh
+        run: |
+          Copy-Item build-windows/Release/inksi_image.dll inksi_image-windows-x86_64.dll
       - name: Upload to Release
         if: startsWith(github.ref, 'refs/tags/')
         uses: softprops/action-gh-release@v2
         with:
-          files: build-windows/Release/inksi_image.dll
+          files: inksi_image-windows-x86_64.dll
