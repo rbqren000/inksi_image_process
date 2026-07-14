@@ -31,6 +31,7 @@ if [ ! -f "$OPENCV_INSTALL_DIR/lib/cmake/opencv4/OpenCVConfig.cmake" ]; then
     mkdir -p /tmp/opencv-macos-build-${ARCH} && cd /tmp/opencv-macos-build-${ARCH}
     cmake "/tmp/opencv-${OPENCV_VERSION}" \
         -DBUILD_SHARED_LIBS=OFF \
+        -DWITH_KLEIDICV=OFF \
         -DCMAKE_BUILD_TYPE=Release \
         -DCMAKE_OSX_ARCHITECTURES="$ARCH" \
         -DCMAKE_INSTALL_PREFIX="$OPENCV_INSTALL_DIR" \
