@@ -27,7 +27,7 @@ echo "NDK: $ANDROID_NDK_HOME"
 OPENCV_INSTALL_DIR="/tmp/opencv-android-install"
 _OCV_FLAGS_FILE="$OPENCV_INSTALL_DIR/.opencv_flags"
 
-_OCV_FLAGS="-DCMAKE_TOOLCHAIN_FILE=$ANDROID_NDK_HOME/build/cmake/android.toolchain.cmake -DANDROID_ABI=arm64-v8a -DANDROID_PLATFORM=android-21 -DBUILD_SHARED_LIBS=OFF -DWITH_KLEIDICV=OFF -DCMAKE_INSTALL_PREFIX=$OPENCV_INSTALL_DIR -DBUILD_EXAMPLES=OFF -DBUILD_TESTS=OFF -DBUILD_PERF_TESTS=OFF -DBUILD_opencv_apps=OFF -DBUILD_JAVA=OFF -DBUILD_PYTHON=OFF -DBUILD_opencv_js=OFF -DBUILD_opencv_ts=OFF -DBUILD_ANDROID_EXAMPLES=OFF -DWITH_IPP=OFF -DWITH_TBB=OFF -DWITH_OPENMP=OFF -DWITH_OPENCL=OFF -DWITH_CUDA=OFF -DWITH_FFMPEG=OFF -DWITH_GSTREAMER=OFF -DWITH_V4L=OFF -DWITH_GTK=OFF -DWITH_QT=OFF -DWITH_OPENEXR=OFF -DWITH_AVIF=OFF -DWITH_WEBP=OFF -DWITH_JASPER=OFF -DENABLE_PRECOMPILED_HEADERS=OFF -DCMAKE_BUILD_TYPE=Release -Wno-dev"
+_OCV_FLAGS="-DCMAKE_TOOLCHAIN_FILE=$ANDROID_NDK_HOME/build/cmake/android.toolchain.cmake -DANDROID_ABI=arm64-v8a -DANDROID_PLATFORM=android-21 -DBUILD_SHARED_LIBS=OFF -DBUILD_LIST=core,imgproc -DWITH_KLEIDICV=OFF -DCMAKE_INSTALL_PREFIX=$OPENCV_INSTALL_DIR -DBUILD_EXAMPLES=OFF -DBUILD_TESTS=OFF -DBUILD_PERF_TESTS=OFF -DBUILD_opencv_apps=OFF -DBUILD_JAVA=OFF -DBUILD_PYTHON=OFF -DBUILD_opencv_js=OFF -DBUILD_opencv_ts=OFF -DBUILD_ANDROID_EXAMPLES=OFF -DWITH_IPP=OFF -DWITH_TBB=OFF -DWITH_OPENMP=OFF -DWITH_OPENCL=OFF -DWITH_CUDA=OFF -DWITH_FFMPEG=OFF -DWITH_GSTREAMER=OFF -DWITH_V4L=OFF -DWITH_GTK=OFF -DWITH_QT=OFF -DWITH_OPENEXR=OFF -DWITH_AVIF=OFF -DWITH_WEBP=OFF -DWITH_JASPER=OFF -DENABLE_PRECOMPILED_HEADERS=OFF -DCMAKE_BUILD_TYPE=Release -Wno-dev"
 
 _NEED_BUILD=false
 if [ ! -f "$OPENCV_INSTALL_DIR/sdk/native/jni/OpenCVConfig.cmake" ]; then
@@ -81,15 +81,19 @@ if [ -z "$AR_CMD" ]; then
 fi
 echo "Using: $AR_CMD"
 
+# 先将 cmake 编译出的 libinksi_image.a 改名，避免被 MRI 的 create 覆盖
+cp libinksi_image.a libinksi_image_own.a
+
 MRI=merge_opencv.mri
 echo "create libinksi_image.a" > "$MRI"
+echo "addlib libinksi_image_own.a" >> "$MRI"
 find "$OPENCV_INSTALL_DIR" -name '*.a' | sort | while read lib; do
     echo "addlib $lib" >> "$MRI"
 done
 echo "save" >> "$MRI"
 echo "end" >> "$MRI"
 "$AR_CMD" -M < "$MRI"
-rm -f "$MRI"
+rm -f "$MRI" libinksi_image_own.a
 
 cp libinksi_image.a "$SCRIPT_DIR/inksi_image-android-arm64-v8a.a"
 echo "Done: $SCRIPT_DIR/inksi_image-android-arm64-v8a.a ($(du -h "$SCRIPT_DIR/inksi_image-android-arm64-v8a.a" | cut -f1))"

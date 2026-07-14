@@ -38,6 +38,7 @@ jobs:
           mkdir opencv-build && cd opencv-build
           cmake ../opencv-${{ env.OPENCV_VERSION }} \
             -DBUILD_SHARED_LIBS=OFF \
+            -DBUILD_LIST=core,imgproc \
             -DCMAKE_BUILD_TYPE=Release \
             -DCMAKE_INSTALL_PREFIX=/tmp/opencv-install \
             -DBUILD_EXAMPLES=OFF -DBUILD_TESTS=OFF -DBUILD_PERF_TESTS=OFF \
