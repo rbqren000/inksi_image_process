@@ -15,8 +15,8 @@ jobs:
       - uses: actions/checkout@v4
       - name: Download OpenCV Windows prebuilt
         run: |
-          curl -L -o opencv-windows.zip https://github.com/opencv/opencv/releases/download/4.13.0/opencv-4.13.0-windows-msvc2022.zip
-          7z x opencv-windows.zip -oopencv-dl
+          curl -L -o opencv-windows.exe https://github.com/opencv/opencv/releases/download/4.13.0/opencv-4.13.0-windows.exe
+          7z x opencv-windows.exe -oopencv-dl
       - name: Build Windows (x86_64)
         run: |
           mkdir build-windows
