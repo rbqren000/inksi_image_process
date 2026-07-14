@@ -25,7 +25,7 @@ echo "NDK: $ANDROID_NDK_HOME"
 
 # 编译 OpenCV 静态库（如 cached 则跳过）
 OPENCV_INSTALL_DIR="/tmp/opencv-android-install"
-if [ ! -f "$OPENCV_INSTALL_DIR/sdk/lib/cmake/opencv4/OpenCVConfig.cmake" ]; then
+if [ ! -f "$OPENCV_INSTALL_DIR/sdk/native/jni/OpenCVConfig.cmake" ]; then
     echo "Building OpenCV $OPENCV_VERSION for Android (arm64-v8a) from source..."
     if [ ! -d "/tmp/opencv-${OPENCV_VERSION}" ]; then
         curl -L -o "/tmp/opencv-${OPENCV_VERSION}.zip" \
@@ -48,7 +48,8 @@ if [ ! -f "$OPENCV_INSTALL_DIR/sdk/lib/cmake/opencv4/OpenCVConfig.cmake" ]; then
         -DWITH_OPENCL=OFF -DWITH_CUDA=OFF -DWITH_FFMPEG=OFF \
         -DWITH_GSTREAMER=OFF -DWITH_V4L=OFF -DWITH_GTK=OFF -DWITH_QT=OFF \
         -DENABLE_PRECOMPILED_HEADERS=OFF \
-        -DCMAKE_BUILD_TYPE=Release
+        -DCMAKE_BUILD_TYPE=Release \
+        -Wno-dev
     cmake --build . -j"$(sysctl -n hw.ncpu 2>/dev/null || nproc)"
     cmake --install .
     echo "OpenCV installed to $OPENCV_INSTALL_DIR"
@@ -64,9 +65,10 @@ cmake "$SCRIPT_DIR" \
     -DCMAKE_TOOLCHAIN_FILE="$ANDROID_NDK_HOME/build/cmake/android.toolchain.cmake" \
     -DANDROID_ABI=arm64-v8a \
     -DANDROID_PLATFORM=android-21 \
-    -DOpenCV_DIR="$OPENCV_INSTALL_DIR/sdk/lib/cmake/opencv4" \
+    -DOpenCV_DIR="$OPENCV_INSTALL_DIR/sdk/native/jni" \
     -DINKSI_USE_OPENCV=ON \
-    -DCMAKE_BUILD_TYPE=Release
+    -DCMAKE_BUILD_TYPE=Release \
+    -Wno-dev
 cmake --build . -j"$(sysctl -n hw.ncpu 2>/dev/null || nproc)"
 
 # 合并 OpenCV 静态库到 inksi_image.a

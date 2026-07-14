@@ -13,7 +13,7 @@ set OPENCV_SRC=%TEMP%\opencv-%OPENCV_VERSION%
 set OPENCV_INSTALL=%TEMP%\opencv-windows-install
 
 REM 编译 OpenCV 源码头像（如 cached 则跳过）
-if not exist "%OPENCV_INSTALL%\lib\cmake\opencv4\OpenCVConfig.cmake" (
+if not exist "%OPENCV_INSTALL%\OpenCVConfig.cmake" (
     echo Building OpenCV %OPENCV_VERSION% for Windows from source...
     if not exist "%OPENCV_SRC%" (
         if not exist "%TEMP%\opencv-%OPENCV_VERSION%.zip" (
@@ -53,7 +53,7 @@ REM 编译 inksi_image（静态链接 OpenCV → .dll 自包含）
 echo Building inksi_image for Windows x86_64...
 if not exist "%SCRIPT_DIR%\build-windows" mkdir "%SCRIPT_DIR%\build-windows"
 cd /d "%SCRIPT_DIR%\build-windows"
-cmake "%SCRIPT_DIR%" -DINKSI_USE_OPENCV=ON -DOpenCV_DIR="%OPENCV_INSTALL%\lib\cmake\opencv4"
+cmake "%SCRIPT_DIR%" -DINKSI_USE_OPENCV=ON -DOpenCV_DIR="%OPENCV_INSTALL%"
 if !errorlevel! neq 0 exit /b !errorlevel!
 cmake --build . --config Release -j
 if !errorlevel! neq 0 exit /b !errorlevel!

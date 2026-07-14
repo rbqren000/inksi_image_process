@@ -15,7 +15,7 @@ if [ "$(uname)" != "Linux" ]; then
 fi
 
 # 编译 OpenCV（如 cached 则跳过）
-OPENCV_INSTALL_DIR="/tmp/opencv-linux-install"
+OPENCV_INSTALL_DIR="/tmp/opencv-install"
 if [ ! -f "$OPENCV_INSTALL_DIR/lib/cmake/opencv4/OpenCVConfig.cmake" ]; then
     echo "Building OpenCV $OPENCV_VERSION from source (Linux)..."
     sudo DEBIAN_FRONTEND=noninteractive apt-get update
