@@ -22,7 +22,7 @@ jobs:
         uses: actions/cache@v4
         with:
           path: /tmp/opencv-install-universal
-          key: opencv-${{ env.OPENCV_VERSION }}-macos-universal
+          key: opencv-${{ env.OPENCV_VERSION }}-macos-universal-static
 
       - name: Build OpenCV from source
         if: steps.cache-opencv.outputs.cache-hit != 'true'
@@ -32,6 +32,7 @@ jobs:
           unzip -q ${{ env.OPENCV_VERSION }}.zip
           mkdir opencv-build && cd opencv-build
           cmake ../opencv-${{ env.OPENCV_VERSION }} \
+            -DBUILD_SHARED_LIBS=OFF \
             -DCMAKE_BUILD_TYPE=Release \
             -DCMAKE_INSTALL_PREFIX=/tmp/opencv-install-universal \
             -DCMAKE_OSX_ARCHITECTURES="arm64;x86_64" \

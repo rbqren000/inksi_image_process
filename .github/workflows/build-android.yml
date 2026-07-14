@@ -20,22 +20,61 @@ jobs:
       - uses: nttld/setup-ndk@v1
         with:
           ndk-version: r27
-      - name: Download OpenCV Android SDK
-        working-directory: /tmp
+
+      - name: Cache OpenCV build (Android)
+        id: cache-opencv
+        uses: actions/cache@v4
+        with:
+          path: /tmp/opencv-android-install
+          key: opencv-4.13.0-android-arm64-v8a
+
+      - name: Build OpenCV from source (Android arm64-v8a)
+        if: steps.cache-opencv.outputs.cache-hit != 'true'
         run: |
-          wget -q https://github.com/opencv/opencv/releases/download/4.13.0/opencv-4.13.0-android-sdk.zip
-          unzip -q opencv-4.13.0-android-sdk.zip
-      - name: Build for arm64-v8a
+          wget -q https://github.com/opencv/opencv/archive/refs/tags/4.13.0.zip -O /tmp/opencv-4.13.0.zip
+          unzip -q /tmp/opencv-4.13.0.zip -d /tmp/
+          mkdir /tmp/opencv-android-build && cd /tmp/opencv-android-build
+          cmake /tmp/opencv-4.13.0 \
+            -DCMAKE_TOOLCHAIN_FILE=$ANDROID_NDK_HOME/build/cmake/android.toolchain.cmake \
+            -DANDROID_ABI=arm64-v8a \
+            -DANDROID_PLATFORM=android-21 \
+            -DBUILD_SHARED_LIBS=OFF \
+            -DCMAKE_INSTALL_PREFIX=/tmp/opencv-android-install \
+            -DBUILD_EXAMPLES=OFF -DBUILD_TESTS=OFF -DBUILD_PERF_TESTS=OFF \
+            -DBUILD_opencv_apps=OFF -DBUILD_JAVA=OFF -DBUILD_PYTHON=OFF \
+            -DBUILD_opencv_js=OFF -DBUILD_opencv_ts=OFF \
+            -DWITH_IPP=OFF -DWITH_TBB=OFF -DWITH_OPENMP=OFF \
+            -DWITH_OPENCL=OFF -DWITH_CUDA=OFF -DWITH_FFMPEG=OFF \
+            -DWITH_GSTREAMER=OFF -DWITH_V4L=OFF -DWITH_GTK=OFF -DWITH_QT=OFF \
+            -DENABLE_PRECOMPILED_HEADERS=OFF \
+            -DCMAKE_BUILD_TYPE=Release
+          cmake --build . -j$(nproc)
+          cmake --install .
+      - name: Build inksi_image for Android arm64-v8a
         run: |
           mkdir build-android && cd build-android
           cmake .. \
             -DCMAKE_TOOLCHAIN_FILE=$ANDROID_NDK_HOME/build/cmake/android.toolchain.cmake \
             -DANDROID_ABI=arm64-v8a \
             -DANDROID_PLATFORM=android-21 \
-            -DOpenCV_DIR=/tmp/OpenCV-android-sdk/sdk/native/jni \
+            -DOpenCV_DIR=/tmp/opencv-android-install/lib/cmake/opencv4 \
             -DINKSI_USE_OPENCV=ON \
             -DCMAKE_BUILD_TYPE=Release
           cmake --build . -j$(nproc)
+
+      - name: Merge OpenCV static libs into libinksi_image.a
+        run: |
+          cd build-android
+          MRI=merge_opencv.mri
+          echo "create libinksi_image.a" > $MRI
+          find /tmp/opencv-android-install -name '*.a' | sort | while read lib; do
+            echo "addlib $lib" >> $MRI
+          done
+          echo "save" >> $MRI
+          echo "end" >> $MRI
+          ar -M < $MRI
+          rm -f $MRI
+          echo "Merged. Size: $(ls -lh libinksi_image.a | awk '{print $5}')"
       - uses: actions/upload-artifact@v4
         with:
           name: inksi_image-android-arm64-v8a

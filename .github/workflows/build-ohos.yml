@@ -17,6 +17,7 @@
 #      cmake ../opencv-4.13.0 \
 #        -DCMAKE_TOOLCHAIN_FILE=$OHOS_NDK_HOME/build/cmake/ohos.toolchain.cmake \
 #        -DOHOS_ARCH=arm64-v8a \
+#        -DBUILD_SHARED_LIBS=OFF \
 #        -DCMAKE_INSTALL_PREFIX=/tmp/opencv-ohos-install \
 #        -DBUILD_EXAMPLES=OFF -DBUILD_TESTS=OFF -DBUILD_PERF_TESTS=OFF \
 #        -DBUILD_opencv_apps=OFF -DBUILD_JAVA=OFF -DBUILD_PYTHON=OFF \

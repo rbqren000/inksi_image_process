@@ -13,22 +13,55 @@ jobs:
       contents: write
     steps:
       - uses: actions/checkout@v4
-      - name: Download OpenCV iOS framework
-        working-directory: /tmp
+
+      - name: Cache OpenCV build (iOS)
+        id: cache-opencv
+        uses: actions/cache@v4
+        with:
+          path: /tmp/opencv-ios-install
+          key: opencv-4.13.0-ios-arm64
+
+      - name: Build OpenCV from source (iOS arm64)
+        if: steps.cache-opencv.outputs.cache-hit != 'true'
         run: |
-          wget -q https://github.com/opencv/opencv/releases/download/4.13.0/opencv-4.13.0-ios-framework.zip
-          unzip -q opencv-4.13.0-ios-framework.zip
-      - name: Build for iOS (arm64)
+          wget -q https://github.com/opencv/opencv/archive/refs/tags/4.13.0.zip -O /tmp/opencv-4.13.0.zip
+          unzip -q /tmp/opencv-4.13.0.zip -d /tmp/
+          mkdir /tmp/opencv-ios-build && cd /tmp/opencv-ios-build
+          cmake /tmp/opencv-4.13.0 \
+            -G Xcode \
+            -DCMAKE_SYSTEM_NAME=iOS \
+            -DCMAKE_OSX_ARCHITECTURES=arm64 \
+            -DBUILD_SHARED_LIBS=OFF \
+            -DCMAKE_INSTALL_PREFIX=/tmp/opencv-ios-install \
+            -DBUILD_EXAMPLES=OFF -DBUILD_TESTS=OFF -DBUILD_PERF_TESTS=OFF \
+            -DBUILD_opencv_apps=OFF -DBUILD_JAVA=OFF -DBUILD_PYTHON=OFF \
+            -DBUILD_opencv_js=OFF -DBUILD_opencv_ts=OFF \
+            -DWITH_IPP=OFF -DWITH_TBB=OFF -DWITH_OPENMP=OFF \
+            -DWITH_OPENCL=OFF -DWITH_CUDA=OFF -DWITH_FFMPEG=OFF \
+            -DWITH_GSTREAMER=OFF -DWITH_V4L=OFF -DWITH_GTK=OFF -DWITH_QT=OFF \
+            -DENABLE_PRECOMPILED_HEADERS=OFF
+          cmake --build . --config Release -j$(sysctl -n hw.ncpu)
+          cmake --install . --config Release
+      - name: Build inksi_image for iOS arm64
         run: |
           mkdir build-ios && cd build-ios
           cmake .. \
             -G Xcode \
             -DCMAKE_SYSTEM_NAME=iOS \
             -DCMAKE_OSX_ARCHITECTURES=arm64 \
-            -DOpenCV_DIR=/tmp \
+            -DOpenCV_DIR=/tmp/opencv-ios-install/lib/cmake/opencv4 \
             -DINKSI_USE_OPENCV=ON
           cmake --build . --config Release -j$(sysctl -n hw.ncpu)
-          find . -name "libinksi_image.a" -type f
+
+      - name: Merge OpenCV static libs into libinksi_image.a
+        run: |
+          ARTIFACT=$(find build-ios -name "libinksi_image.a" -type f | head -1)
+          echo "Found artifact: $ARTIFACT"
+          OPENCV_LIBS=$(find /tmp/opencv-ios-install -name '*.a' | sort | tr '\n' ' ')
+          libtool -static -o build-ios/inksi_image_merged.a "$ARTIFACT" $OPENCV_LIBS
+          cp build-ios/inksi_image_merged.a "$ARTIFACT"
+          rm -f build-ios/inksi_image_merged.a
+          echo "Merged. Size: $(ls -lh "$ARTIFACT" | awk '{print $5}')"
       - uses: actions/upload-artifact@v4
         with:
           name: inksi_image-ios-arm64

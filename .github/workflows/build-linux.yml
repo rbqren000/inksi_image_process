@@ -27,7 +27,7 @@ jobs:
         uses: actions/cache@v4
         with:
           path: /tmp/opencv-install
-          key: opencv-${{ env.OPENCV_VERSION }}-linux-x86_64
+          key: opencv-${{ env.OPENCV_VERSION }}-linux-static
 
       - name: Build OpenCV from source
         if: steps.cache-opencv.outputs.cache-hit != 'true'
@@ -37,6 +37,7 @@ jobs:
           unzip -q ${{ env.OPENCV_VERSION }}.zip
           mkdir opencv-build && cd opencv-build
           cmake ../opencv-${{ env.OPENCV_VERSION }} \
+            -DBUILD_SHARED_LIBS=OFF \
             -DCMAKE_BUILD_TYPE=Release \
             -DCMAKE_INSTALL_PREFIX=/tmp/opencv-install \
             -DBUILD_EXAMPLES=OFF -DBUILD_TESTS=OFF -DBUILD_PERF_TESTS=OFF \

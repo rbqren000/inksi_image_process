@@ -3,34 +3,56 @@ set -euo pipefail
 
 # ============================================================
 # iOS 编译脚本（仅 macOS）
-# 产物: build-ios-arm64/libinksi_image.a → inksi_image-ios-arm64.a
+# 从源码编译 OpenCV 4.13.0 + 合并到 inksi_image.a
+# 产物: inksi_image-ios-arm64.a（自包含 OpenCV）
 # ============================================================
 SCRIPT_DIR="$(cd "$(dirname "$0")/.." && pwd)"
 OPENCV_VERSION="4.13.0"
-OPENCV_ZIP="/tmp/opencv-${OPENCV_VERSION}-ios-framework.zip"
-OPENCV_DIR="/tmp"
 
 if [ "$(uname)" != "Darwin" ]; then
     echo "Error: iOS build requires macOS"
     exit 1
 fi
 
-# 下载 OpenCV iOS framework
-if [ ! -d /tmp/opencv2.framework ]; then
-    echo "Downloading OpenCV iOS framework..."
-    curl -L -o "$OPENCV_ZIP" "https://github.com/opencv/opencv/releases/download/$OPENCV_VERSION/opencv-${OPENCV_VERSION}-ios-framework.zip"
-    unzip -q "$OPENCV_ZIP" -d /tmp/
+# 编译 OpenCV 静态库（如 cached 则跳过）
+OPENCV_INSTALL_DIR="/tmp/opencv-ios-install"
+if [ ! -f "$OPENCV_INSTALL_DIR/lib/cmake/opencv4/OpenCVConfig.cmake" ]; then
+    echo "Building OpenCV $OPENCV_VERSION for iOS (arm64) from source..."
+    if [ ! -d "/tmp/opencv-${OPENCV_VERSION}" ]; then
+        curl -L -o "/tmp/opencv-${OPENCV_VERSION}.zip" \
+            "https://github.com/opencv/opencv/archive/refs/tags/${OPENCV_VERSION}.zip"
+        unzip -q "/tmp/opencv-${OPENCV_VERSION}.zip" -d /tmp/
+    fi
+    mkdir -p /tmp/opencv-ios-build && cd /tmp/opencv-ios-build
+    cmake "/tmp/opencv-${OPENCV_VERSION}" \
+        -G Xcode \
+        -DCMAKE_SYSTEM_NAME=iOS \
+        -DCMAKE_OSX_ARCHITECTURES=arm64 \
+        -DBUILD_SHARED_LIBS=OFF \
+        -DCMAKE_INSTALL_PREFIX="$OPENCV_INSTALL_DIR" \
+        -DBUILD_EXAMPLES=OFF -DBUILD_TESTS=OFF -DBUILD_PERF_TESTS=OFF \
+        -DBUILD_opencv_apps=OFF -DBUILD_JAVA=OFF -DBUILD_PYTHON=OFF \
+        -DBUILD_opencv_js=OFF -DBUILD_opencv_ts=OFF \
+        -DWITH_IPP=OFF -DWITH_TBB=OFF -DWITH_OPENMP=OFF \
+        -DWITH_OPENCL=OFF -DWITH_CUDA=OFF -DWITH_FFMPEG=OFF \
+        -DWITH_GSTREAMER=OFF -DWITH_V4L=OFF -DWITH_GTK=OFF -DWITH_QT=OFF \
+        -DENABLE_PRECOMPILED_HEADERS=OFF
+    cmake --build . --config Release -j"$(sysctl -n hw.ncpu)"
+    cmake --install . --config Release
+    echo "OpenCV installed to $OPENCV_INSTALL_DIR"
+else
+    echo "OpenCV cached at $OPENCV_INSTALL_DIR"
 fi
 
-# 编译
+# 编译 inksi_image（此时仅含自己代码，不含 OpenCV）
 echo "Building inksi_image for iOS arm64..."
-mkdir -p "$SCRIPT_DIR/build-ios-arm64"
-cd "$SCRIPT_DIR/build-ios-arm64"
+mkdir -p "$SCRIPT_DIR/build-ios"
+cd "$SCRIPT_DIR/build-ios"
 cmake "$SCRIPT_DIR" \
     -G Xcode \
     -DCMAKE_SYSTEM_NAME=iOS \
     -DCMAKE_OSX_ARCHITECTURES=arm64 \
-    -DOpenCV_DIR="$OPENCV_DIR" \
+    -DOpenCV_DIR="$OPENCV_INSTALL_DIR/lib/cmake/opencv4" \
     -DINKSI_USE_OPENCV=ON
 cmake --build . --config Release -j"$(sysctl -n hw.ncpu)"
 
@@ -40,5 +62,13 @@ if [ -z "$ARTIFACT" ]; then
     echo "Error: libinksi_image.a not found"
     exit 1
 fi
+
+# 合并 OpenCV 静态库到 inksi_image.a
+echo "Merging OpenCV static libs..."
+OPENCV_LIBS=$(find "$OPENCV_INSTALL_DIR" -name '*.a' | sort | tr '\n' ' ')
+libtool -static -o merged.a "$ARTIFACT" $OPENCV_LIBS
+cp merged.a "$ARTIFACT"
+rm -f merged.a
+
 cp "$ARTIFACT" "$SCRIPT_DIR/inksi_image-ios-arm64.a"
 echo "Done: $SCRIPT_DIR/inksi_image-ios-arm64.a ($(du -h "$SCRIPT_DIR/inksi_image-ios-arm64.a" | cut -f1))"

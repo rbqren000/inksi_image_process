@@ -27,6 +27,7 @@ if [ ! -f "$OPENCV_INSTALL_DIR/lib/cmake/opencv4/OpenCVConfig.cmake" ]; then
     fi
     mkdir -p /tmp/opencv-linux-build && cd /tmp/opencv-linux-build
     cmake "/tmp/opencv-${OPENCV_VERSION}" \
+        -DBUILD_SHARED_LIBS=OFF \
         -DCMAKE_BUILD_TYPE=Release \
         -DCMAKE_INSTALL_PREFIX="$OPENCV_INSTALL_DIR" \
         -DBUILD_EXAMPLES=OFF -DBUILD_TESTS=OFF -DBUILD_PERF_TESTS=OFF \

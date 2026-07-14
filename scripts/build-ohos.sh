@@ -46,6 +46,7 @@ if [ ! -f "$OPENCV_INSTALL_DIR/lib/cmake/opencv4/OpenCVConfig.cmake" ]; then
     cmake "$OPENCV_SRC" \
         -DCMAKE_TOOLCHAIN_FILE="$TOOLCHAIN" \
         -DOHOS_ARCH=arm64-v8a \
+        -DBUILD_SHARED_LIBS=OFF \
         -DCMAKE_INSTALL_PREFIX="$OPENCV_INSTALL_DIR" \
         -DBUILD_EXAMPLES=OFF -DBUILD_TESTS=OFF -DBUILD_PERF_TESTS=OFF \
         -DBUILD_opencv_apps=OFF -DBUILD_JAVA=OFF -DBUILD_PYTHON=OFF \
