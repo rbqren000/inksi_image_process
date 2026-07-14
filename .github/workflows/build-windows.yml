@@ -14,14 +14,21 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Download OpenCV Windows prebuilt
+        shell: pwsh
         run: |
-          curl -L -o opencv-windows.exe https://github.com/opencv/opencv/releases/download/4.13.0/opencv-4.13.0-windows.exe
-          7z x opencv-windows.exe -oopencv-dl
+          curl -L -o "${{ runner.temp }}\opencv-windows.exe" https://github.com/opencv/opencv/releases/download/4.13.0/opencv-4.13.0-windows.exe
+          7z x "${{ runner.temp }}\opencv-windows.exe" -o"${{ runner.temp }}\opencv"
+          Write-Host "OpenCV extracted, listing contents:"
+          Get-ChildItem "${{ runner.temp }}\opencv" -Depth 1 -Name
       - name: Build Windows (x86_64)
+        shell: pwsh
         run: |
+          $cvDir = "${{ runner.temp }}\opencv\opencv\build"
+          Write-Host "OpenCV_DIR: $cvDir"
           mkdir build-windows
           cd build-windows
-          cmake .. -DINKSI_USE_OPENCV=ON -DOpenCV_DIR=../opencv-dl/opencv/build
+          cmake .. -DINKSI_USE_OPENCV=ON -DOpenCV_DIR="$cvDir"
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
           cmake --build . --config Release -j
       - uses: actions/upload-artifact@v4
         with:
