@@ -60,3 +60,8 @@ jobs:
         with:
           name: inksi_image-linux-x86_64
           path: build-linux/libinksi_image.so
+      - name: Upload to Release
+        if: startsWith(github.ref, 'refs/tags/')
+        uses: softprops/action-gh-release@v2
+        with:
+          files: build-linux/libinksi_image.so
