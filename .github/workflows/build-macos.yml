@@ -25,7 +25,7 @@ jobs:
         uses: actions/cache@v4
         with:
           path: /tmp/opencv-macos-${{ matrix.arch }}
-          key: opencv-${{ env.OPENCV_VERSION }}-macos-${{ matrix.arch }}
+          key: opencv-${{ env.OPENCV_VERSION }}-macos-${{ matrix.arch }}-v2
 
       - name: Build OpenCV from source (${{ matrix.arch }})
         if: steps.cache-opencv.outputs.cache-hit != 'true'
@@ -46,6 +46,7 @@ jobs:
             -DWITH_IPP=OFF -DWITH_TBB=OFF -DWITH_OPENMP=OFF \
             -DWITH_OPENCL=OFF -DWITH_CUDA=OFF -DWITH_FFMPEG=OFF \
             -DWITH_GSTREAMER=OFF -DWITH_V4L=OFF -DWITH_GTK=OFF -DWITH_QT=OFF \
+            -DWITH_EIGEN=OFF \
             -DENABLE_PRECOMPILED_HEADERS=OFF
           cmake --build . -j$(sysctl -n hw.ncpu)
           cmake --install .

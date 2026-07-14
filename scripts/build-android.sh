@@ -23,9 +23,22 @@ if [ -z "${ANDROID_NDK_HOME:-}" ]; then
 fi
 echo "NDK: $ANDROID_NDK_HOME"
 
-# 编译 OpenCV 静态库（如 cached 则跳过）
+# 编译 OpenCV 静态库（flags 变更时自动清理旧缓存）
 OPENCV_INSTALL_DIR="/tmp/opencv-android-install"
+_OCV_FLAGS_FILE="$OPENCV_INSTALL_DIR/.opencv_flags"
+
+_OCV_FLAGS="-DCMAKE_TOOLCHAIN_FILE=$ANDROID_NDK_HOME/build/cmake/android.toolchain.cmake -DANDROID_ABI=arm64-v8a -DANDROID_PLATFORM=android-21 -DBUILD_SHARED_LIBS=OFF -DWITH_KLEIDICV=OFF -DCMAKE_INSTALL_PREFIX=$OPENCV_INSTALL_DIR -DBUILD_EXAMPLES=OFF -DBUILD_TESTS=OFF -DBUILD_PERF_TESTS=OFF -DBUILD_opencv_apps=OFF -DBUILD_JAVA=OFF -DBUILD_PYTHON=OFF -DBUILD_opencv_js=OFF -DBUILD_opencv_ts=OFF -DBUILD_ANDROID_EXAMPLES=OFF -DWITH_IPP=OFF -DWITH_TBB=OFF -DWITH_OPENMP=OFF -DWITH_OPENCL=OFF -DWITH_CUDA=OFF -DWITH_FFMPEG=OFF -DWITH_GSTREAMER=OFF -DWITH_V4L=OFF -DWITH_GTK=OFF -DWITH_QT=OFF -DENABLE_PRECOMPILED_HEADERS=OFF -DCMAKE_BUILD_TYPE=Release -Wno-dev"
+
+_NEED_BUILD=false
 if [ ! -f "$OPENCV_INSTALL_DIR/sdk/native/jni/OpenCVConfig.cmake" ]; then
+    _NEED_BUILD=true
+elif [ ! -f "$_OCV_FLAGS_FILE" ] || [ "$_OCV_FLAGS" != "$(cat "$_OCV_FLAGS_FILE")" ]; then
+    echo "OpenCV flags changed, discarding stale cache..."
+    rm -rf "$OPENCV_INSTALL_DIR"
+    _NEED_BUILD=true
+fi
+
+if $_NEED_BUILD; then
     echo "Building OpenCV $OPENCV_VERSION for Android (arm64-v8a) from source..."
     if [ ! -d "/tmp/opencv-${OPENCV_VERSION}" ]; then
         curl -L -o "/tmp/opencv-${OPENCV_VERSION}.zip" \
@@ -33,25 +46,11 @@ if [ ! -f "$OPENCV_INSTALL_DIR/sdk/native/jni/OpenCVConfig.cmake" ]; then
         unzip -q "/tmp/opencv-${OPENCV_VERSION}.zip" -d /tmp/
     fi
     mkdir -p /tmp/opencv-android-build && cd /tmp/opencv-android-build
-    cmake "/tmp/opencv-${OPENCV_VERSION}" \
-        -DCMAKE_TOOLCHAIN_FILE="$ANDROID_NDK_HOME/build/cmake/android.toolchain.cmake" \
-        -DANDROID_ABI=arm64-v8a \
-        -DANDROID_PLATFORM=android-21 \
-        -DBUILD_SHARED_LIBS=OFF \
-        -DWITH_KLEIDICV=OFF \
-        -DCMAKE_INSTALL_PREFIX="$OPENCV_INSTALL_DIR" \
-        -DBUILD_EXAMPLES=OFF -DBUILD_TESTS=OFF -DBUILD_PERF_TESTS=OFF \
-        -DBUILD_opencv_apps=OFF -DBUILD_JAVA=OFF -DBUILD_PYTHON=OFF \
-        -DBUILD_opencv_js=OFF -DBUILD_opencv_ts=OFF \
-        -DBUILD_ANDROID_EXAMPLES=OFF \
-        -DWITH_IPP=OFF -DWITH_TBB=OFF -DWITH_OPENMP=OFF \
-        -DWITH_OPENCL=OFF -DWITH_CUDA=OFF -DWITH_FFMPEG=OFF \
-        -DWITH_GSTREAMER=OFF -DWITH_V4L=OFF -DWITH_GTK=OFF -DWITH_QT=OFF \
-        -DENABLE_PRECOMPILED_HEADERS=OFF \
-        -DCMAKE_BUILD_TYPE=Release \
-        -Wno-dev
+    # shellcheck disable=SC2086
+    cmake "/tmp/opencv-${OPENCV_VERSION}" $_OCV_FLAGS
     cmake --build . -j"$(sysctl -n hw.ncpu 2>/dev/null || nproc)"
     cmake --install .
+    echo "$_OCV_FLAGS" > "$_OCV_FLAGS_FILE"
     echo "OpenCV installed to $OPENCV_INSTALL_DIR"
 else
     echo "OpenCV cached at $OPENCV_INSTALL_DIR"

@@ -38,6 +38,7 @@ jobs:
             -DWITH_IPP=OFF -DWITH_TBB=OFF -DWITH_OPENMP=OFF `
             -DWITH_OPENCL=OFF -DWITH_CUDA=OFF -DWITH_FFMPEG=OFF `
             -DWITH_GSTREAMER=OFF -DWITH_V4L=OFF -DWITH_GTK=OFF -DWITH_QT=OFF `
+            -DWITH_EIGEN=OFF `
             -DENABLE_PRECOMPILED_HEADERS=OFF `
             -DCMAKE_BUILD_TYPE=Release
           if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
@@ -49,7 +50,7 @@ jobs:
         run: |
           mkdir build-windows
           cd build-windows
-          cmake .. -DINKSI_USE_OPENCV=ON -DOpenCV_DIR="C:\opencv-windows-install"
+          cmake .. -DINKSI_USE_OPENCV=ON -DOpenCV_DIR="C:\opencv-windows-install" -DOpenCV_STATIC=ON
           if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
           cmake --build . --config Release -j
       - uses: actions/upload-artifact@v4
