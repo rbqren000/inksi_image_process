@@ -9,19 +9,19 @@
 /* Begin PBXAggregateTarget section */
 		234ADC1FFF6045DAA78AC5CB /* install */ = {
 			isa = PBXAggregateTarget;
-			buildConfigurationList = 172136C01BA44CA987946488 /* Build configuration list for PBXAggregateTarget "install" */;
+			buildConfigurationList = DF34BA421D954B3A882E7422 /* Build configuration list for PBXAggregateTarget "install" */;
 			buildPhases = (
 				93426DA6A4AC2C2AC9CE883C /* CMake PostBuild Rules */,
 			);
 			dependencies = (
-				94A68C45EE174942B53FBDE0 /* PBXTargetDependency */,
+				3C2049C63E5B4910983A5F68 /* PBXTargetDependency */,
 			);
 			name = install;
 			productName = install;
 		};
 		3FC7CC2B15CD4D66AE302E78 /* ZERO_CHECK */ = {
 			isa = PBXAggregateTarget;
-			buildConfigurationList = 497C734DE8B747DDAF1D0218 /* Build configuration list for PBXAggregateTarget "ZERO_CHECK" */;
+			buildConfigurationList = 68B7AE65ED824049A46B9CDC /* Build configuration list for PBXAggregateTarget "ZERO_CHECK" */;
 			buildPhases = (
 				E9FF044AF817379B77C1D21D /* Generate CMakeFiles/ZERO_CHECK */,
 			);
@@ -32,13 +32,13 @@
 		};
 		D96CAC765ED8423EB7EDD20B /* ALL_BUILD */ = {
 			isa = PBXAggregateTarget;
-			buildConfigurationList = 154D9CBAC445488DB9E53BBF /* Build configuration list for PBXAggregateTarget "ALL_BUILD" */;
+			buildConfigurationList = 41E46F50775E4F418AE7E2A3 /* Build configuration list for PBXAggregateTarget "ALL_BUILD" */;
 			buildPhases = (
 				95F07E44430EE8B4082A4DBC /* Generate CMakeFiles/ALL_BUILD */,
 			);
 			dependencies = (
-				EF9805CEBADB4C8F8AB9FA3C /* PBXTargetDependency */,
-				4392C7EA07A24DC28D4887C5 /* PBXTargetDependency */,
+				F8627A9EC8AB41888B562469 /* PBXTargetDependency */,
+				A07DD621AAB64DDCA7A55DCD /* PBXTargetDependency */,
 			);
 			name = ALL_BUILD;
 			productName = ALL_BUILD;
@@ -46,83 +46,83 @@
 /* End PBXAggregateTarget section */
 
 /* Begin PBXBuildFile section */
-		28D61DCDEAC04185AB112F1B /* /Users/rbq/works/AndroidStudioProjects/HalftoneAll/inksi_image_process/build-ios/CMakeFiles/inksi_image.dir/Info.plist */ = {isa = PBXBuildFile; fileRef = E0DC4A6F44204302A4AA5AEB /* /Users/rbq/works/AndroidStudioProjects/HalftoneAll/inksi_image_process/build-ios/CMakeFiles/inksi_image.dir/Info.plist */; };
-		70AFBABA3802435B860EF3FE /* /Users/rbq/works/AndroidStudioProjects/HalftoneAll/inksi_image_process/src/inksi_image_api.cpp */ = {isa = PBXBuildFile; fileRef = B89BD26A897848BE824B602B /* /Users/rbq/works/AndroidStudioProjects/HalftoneAll/inksi_image_process/src/inksi_image_api.cpp */; };
-		A101379CFBC74D799D0BD236 /* /Users/rbq/works/AndroidStudioProjects/HalftoneAll/inksi_image_process/CMakeLists.txt */ = {isa = PBXBuildFile; fileRef = 3BA89B46A5704A6093E55CC8 /* /Users/rbq/works/AndroidStudioProjects/HalftoneAll/inksi_image_process/CMakeLists.txt */; };
+		5ABA60BD681B4CC2A83BA3D9 /* /Users/rbq/works/AndroidStudioProjects/HalftoneAll/inksi_image_process/CMakeLists.txt */ = {isa = PBXBuildFile; fileRef = 5E1F3734A8EB4C3985E37AFC /* /Users/rbq/works/AndroidStudioProjects/HalftoneAll/inksi_image_process/CMakeLists.txt */; };
+		92669A6800C74440959C13BA /* /Users/rbq/works/AndroidStudioProjects/HalftoneAll/inksi_image_process/src/inksi_image_api.cpp */ = {isa = PBXBuildFile; fileRef = 4DE7169C1B254A9691BCFC62 /* /Users/rbq/works/AndroidStudioProjects/HalftoneAll/inksi_image_process/src/inksi_image_api.cpp */; };
+		D21538AC471140208D2306B2 /* /Users/rbq/works/AndroidStudioProjects/HalftoneAll/inksi_image_process/build-ios/CMakeFiles/inksi_image.dir/Info.plist */ = {isa = PBXBuildFile; fileRef = D387331F0ED143B391E015E1 /* /Users/rbq/works/AndroidStudioProjects/HalftoneAll/inksi_image_process/build-ios/CMakeFiles/inksi_image.dir/Info.plist */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXBuildStyle section */
-		1CDF347D9194422093C91E0E /* Release */ = {
-			isa = PBXBuildStyle;
-			buildSettings = {
-				COPY_PHASE_STRIP = NO;
-			};
-			name = Release;
-		};
-		5D544D82A1484A738BF0E5AF /* RelWithDebInfo */ = {
-			isa = PBXBuildStyle;
-			buildSettings = {
-				COPY_PHASE_STRIP = NO;
-			};
-			name = RelWithDebInfo;
-		};
-		9CE24ADC63AA46BBABD6066D /* Debug */ = {
-			isa = PBXBuildStyle;
-			buildSettings = {
-				COPY_PHASE_STRIP = NO;
-			};
-			name = Debug;
-		};
-		EA6CB9BEDC024A7888004585 /* MinSizeRel */ = {
+		0BD6B48E07C54DE595104923 /* MinSizeRel */ = {
 			isa = PBXBuildStyle;
 			buildSettings = {
 				COPY_PHASE_STRIP = NO;
 			};
 			name = MinSizeRel;
 		};
+		144F9AC18FDA401D8458D7C3 /* RelWithDebInfo */ = {
+			isa = PBXBuildStyle;
+			buildSettings = {
+				COPY_PHASE_STRIP = NO;
+			};
+			name = RelWithDebInfo;
+		};
+		3B1ACB7C233F48A9A7EFBBFA /* Release */ = {
+			isa = PBXBuildStyle;
+			buildSettings = {
+				COPY_PHASE_STRIP = NO;
+			};
+			name = Release;
+		};
+		D2D93A81350A42A19CB42BEC /* Debug */ = {
+			isa = PBXBuildStyle;
+			buildSettings = {
+				COPY_PHASE_STRIP = NO;
+			};
+			name = Debug;
+		};
 /* End PBXBuildStyle section */
 
 /* Begin PBXContainerItemProxy section */
-		6D0E734F43C9426F9CED9085 /* PBXContainerItemProxy */ = {
+		235CD21003C94110B8F8885F /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 30339DF82AFC41EAAAF6737A /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 3FC7CC2B15CD4D66AE302E78;
+			remoteInfo = ZERO_CHECK;
+		};
+		4821D0C423C84A49BEABFD13 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 30339DF82AFC41EAAAF6737A /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 3FC7CC2B15CD4D66AE302E78;
+			remoteInfo = ZERO_CHECK;
+		};
+		B60CE223CFD74E5399B9D9A3 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 30339DF82AFC41EAAAF6737A /* Project object */;
 			proxyType = 1;
 			remoteGlobalIDString = D96CAC765ED8423EB7EDD20B;
 			remoteInfo = ALL_BUILD;
 		};
-		8CA228E905064839B30C9975 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 30339DF82AFC41EAAAF6737A /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 3FC7CC2B15CD4D66AE302E78;
-			remoteInfo = ZERO_CHECK;
-		};
-		D15EE1659A7A441E938DDEB0 /* PBXContainerItemProxy */ = {
+		E1EEC75D5A35490CB7FF7F4B /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 30339DF82AFC41EAAAF6737A /* Project object */;
 			proxyType = 1;
 			remoteGlobalIDString = 021626D5D4824669AADA4166;
 			remoteInfo = inksi_image;
 		};
-		EBDA4E4444E2445F96B94A54 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 30339DF82AFC41EAAAF6737A /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 3FC7CC2B15CD4D66AE302E78;
-			remoteInfo = ZERO_CHECK;
-		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		3BA89B46A5704A6093E55CC8 /* /Users/rbq/works/AndroidStudioProjects/HalftoneAll/inksi_image_process/CMakeLists.txt */ = {isa = PBXFileReference; explicitFileType = sourcecode.text; fileEncoding = 4; name = CMakeLists.txt; path = CMakeLists.txt; sourceTree = SOURCE_ROOT; };
-		9000D9B18A9D483CB14A9485 /* inksi_image */ = {isa = PBXFileReference; explicitFileType = archive.ar; path = libinksi_image.a; sourceTree = BUILT_PRODUCTS_DIR; };
-		9073293C9F0C46EF800B82B3 /* /Users/rbq/works/AndroidStudioProjects/HalftoneAll/inksi_image_process/CMakeLists.txt */ = {isa = PBXFileReference; explicitFileType = sourcecode.text; fileEncoding = 4; name = CMakeLists.txt; path = CMakeLists.txt; sourceTree = SOURCE_ROOT; };
-		B89BD26A897848BE824B602B /* /Users/rbq/works/AndroidStudioProjects/HalftoneAll/inksi_image_process/src/inksi_image_api.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = inksi_image_api.cpp; path = src/inksi_image_api.cpp; sourceTree = SOURCE_ROOT; };
-		E0DC4A6F44204302A4AA5AEB /* /Users/rbq/works/AndroidStudioProjects/HalftoneAll/inksi_image_process/build-ios/CMakeFiles/inksi_image.dir/Info.plist */ = {isa = PBXFileReference; explicitFileType = sourcecode.text.plist; fileEncoding = 4; name = Info.plist; path = "build-ios/CMakeFiles/inksi_image.dir/Info.plist"; sourceTree = SOURCE_ROOT; };
+		4A79C5A26D1C405BBC11ABE5 /* inksi_image */ = {isa = PBXFileReference; explicitFileType = archive.ar; path = libinksi_image.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		4DE7169C1B254A9691BCFC62 /* /Users/rbq/works/AndroidStudioProjects/HalftoneAll/inksi_image_process/src/inksi_image_api.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = inksi_image_api.cpp; path = src/inksi_image_api.cpp; sourceTree = SOURCE_ROOT; };
+		5E1F3734A8EB4C3985E37AFC /* /Users/rbq/works/AndroidStudioProjects/HalftoneAll/inksi_image_process/CMakeLists.txt */ = {isa = PBXFileReference; explicitFileType = sourcecode.text; fileEncoding = 4; name = CMakeLists.txt; path = CMakeLists.txt; sourceTree = SOURCE_ROOT; };
+		AE873E270C674B2DAEBB3FBD /* /Users/rbq/works/AndroidStudioProjects/HalftoneAll/inksi_image_process/CMakeLists.txt */ = {isa = PBXFileReference; explicitFileType = sourcecode.text; fileEncoding = 4; name = CMakeLists.txt; path = CMakeLists.txt; sourceTree = SOURCE_ROOT; };
+		D387331F0ED143B391E015E1 /* /Users/rbq/works/AndroidStudioProjects/HalftoneAll/inksi_image_process/build-ios/CMakeFiles/inksi_image.dir/Info.plist */ = {isa = PBXFileReference; explicitFileType = sourcecode.text.plist; fileEncoding = 4; name = Info.plist; path = "build-ios/CMakeFiles/inksi_image.dir/Info.plist"; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
-		6C95406D8F44429A992DF565 /* Frameworks */ = {
+		26B6E466DFD844FBA76280F7 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -132,71 +132,71 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		3D1820DABCCE41A6BE545C62 = {
-			isa = PBXGroup;
-			children = (
-				73D4105602AB4888AA7C21F1 /* inksi_image */,
-				F79845D569E94AEBAA279D37 /* ALL_BUILD */,
-				5FA3F0419ED740579709F998 /* Products */,
-				C8221FE783854BF89D230B35 /* Frameworks */,
-			);
-			sourceTree = "<group>";
-		};
-		5FA3F0419ED740579709F998 /* Products */ = {
-			isa = PBXGroup;
-			children = (
-				9000D9B18A9D483CB14A9485 /* inksi_image */,
-			);
-			name = Products;
-			sourceTree = "<group>";
-		};
-		73D4105602AB4888AA7C21F1 /* inksi_image */ = {
-			isa = PBXGroup;
-			children = (
-				A9C5D39688154CDC80F842CF /* Source Files */,
-				851C56512DBF483FAB758C77 /* Resources */,
-				3BA89B46A5704A6093E55CC8 /* /Users/rbq/works/AndroidStudioProjects/HalftoneAll/inksi_image_process/CMakeLists.txt */,
-			);
-			name = inksi_image;
-			sourceTree = "<group>";
-		};
-		851C56512DBF483FAB758C77 /* Resources */ = {
-			isa = PBXGroup;
-			children = (
-				E0DC4A6F44204302A4AA5AEB /* /Users/rbq/works/AndroidStudioProjects/HalftoneAll/inksi_image_process/build-ios/CMakeFiles/inksi_image.dir/Info.plist */,
-			);
-			name = Resources;
-			sourceTree = "<group>";
-		};
-		A9C5D39688154CDC80F842CF /* Source Files */ = {
-			isa = PBXGroup;
-			children = (
-				B89BD26A897848BE824B602B /* /Users/rbq/works/AndroidStudioProjects/HalftoneAll/inksi_image_process/src/inksi_image_api.cpp */,
-			);
-			name = "Source Files";
-			sourceTree = "<group>";
-		};
-		BEE106E4E19D459EA91F2D7C /* CMake Rules */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			name = "CMake Rules";
-			sourceTree = "<group>";
-		};
-		C8221FE783854BF89D230B35 /* Frameworks */ = {
+		4F7ED50D98EA4ABA89550C95 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
-		F79845D569E94AEBAA279D37 /* ALL_BUILD */ = {
+		66EF575A6C9344589F025930 /* ALL_BUILD */ = {
 			isa = PBXGroup;
 			children = (
-				BEE106E4E19D459EA91F2D7C /* CMake Rules */,
-				9073293C9F0C46EF800B82B3 /* /Users/rbq/works/AndroidStudioProjects/HalftoneAll/inksi_image_process/CMakeLists.txt */,
+				9A1203DFDDC946BF8FF82B66 /* CMake Rules */,
+				AE873E270C674B2DAEBB3FBD /* /Users/rbq/works/AndroidStudioProjects/HalftoneAll/inksi_image_process/CMakeLists.txt */,
 			);
 			name = ALL_BUILD;
+			sourceTree = "<group>";
+		};
+		695009DFB85144A992E20952 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				4A79C5A26D1C405BBC11ABE5 /* inksi_image */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		6F289F2A1DA44FCE86AE1C28 /* inksi_image */ = {
+			isa = PBXGroup;
+			children = (
+				A9DA949F2AD3484F8AB97B73 /* Source Files */,
+				9C9B504DD0DD41AFBF7E7985 /* Resources */,
+				5E1F3734A8EB4C3985E37AFC /* /Users/rbq/works/AndroidStudioProjects/HalftoneAll/inksi_image_process/CMakeLists.txt */,
+			);
+			name = inksi_image;
+			sourceTree = "<group>";
+		};
+		77CA0090C53743B1A602E868 = {
+			isa = PBXGroup;
+			children = (
+				6F289F2A1DA44FCE86AE1C28 /* inksi_image */,
+				66EF575A6C9344589F025930 /* ALL_BUILD */,
+				695009DFB85144A992E20952 /* Products */,
+				4F7ED50D98EA4ABA89550C95 /* Frameworks */,
+			);
+			sourceTree = "<group>";
+		};
+		9A1203DFDDC946BF8FF82B66 /* CMake Rules */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = "CMake Rules";
+			sourceTree = "<group>";
+		};
+		9C9B504DD0DD41AFBF7E7985 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				D387331F0ED143B391E015E1 /* /Users/rbq/works/AndroidStudioProjects/HalftoneAll/inksi_image_process/build-ios/CMakeFiles/inksi_image.dir/Info.plist */,
+			);
+			name = Resources;
+			sourceTree = "<group>";
+		};
+		A9DA949F2AD3484F8AB97B73 /* Source Files */ = {
+			isa = PBXGroup;
+			children = (
+				4DE7169C1B254A9691BCFC62 /* /Users/rbq/works/AndroidStudioProjects/HalftoneAll/inksi_image_process/src/inksi_image_api.cpp */,
+			);
+			name = "Source Files";
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -204,19 +204,19 @@
 /* Begin PBXNativeTarget section */
 		021626D5D4824669AADA4166 /* inksi_image */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 92EF8E761C714E10A91D379C /* Build configuration list for PBXNativeTarget "inksi_image" */;
+			buildConfigurationList = B40218C41C8342EA83127624 /* Build configuration list for PBXNativeTarget "inksi_image" */;
 			buildPhases = (
-				D82152B2963C4347A382739E /* Sources */,
-				6C95406D8F44429A992DF565 /* Frameworks */,
+				8042396DE7A245878F651B84 /* Sources */,
+				26B6E466DFD844FBA76280F7 /* Frameworks */,
 			);
 			buildRules = (
 			);
 			dependencies = (
-				6D9924A0AB9240FFBD644833 /* PBXTargetDependency */,
+				C6A8D694F08647D4ACA2AE64 /* PBXTargetDependency */,
 			);
 			name = inksi_image;
 			productName = inksi_image;
-			productReference = 9000D9B18A9D483CB14A9485 /* inksi_image */;
+			productReference = 4A79C5A26D1C405BBC11ABE5 /* inksi_image */;
 			productType = "com.apple.product-type.library.static";
 		};
 /* End PBXNativeTarget section */
@@ -228,18 +228,18 @@
 				BuildIndependentTargetsInParallel = YES;
 				LastUpgradeCheck = 2660;
 			};
-			buildConfigurationList = DDE5090896394A64B5D72C7E /* Build configuration list for PBXProject "inksi_image_process" */;
+			buildConfigurationList = 1A069287536D4FE1929E9494 /* Build configuration list for PBXProject "inksi_image_process" */;
 			buildSettings = {
 			};
 			buildStyles = (
-				9CE24ADC63AA46BBABD6066D /* Debug */,
-				1CDF347D9194422093C91E0E /* Release */,
-				EA6CB9BEDC024A7888004585 /* MinSizeRel */,
-				5D544D82A1484A738BF0E5AF /* RelWithDebInfo */,
+				D2D93A81350A42A19CB42BEC /* Debug */,
+				3B1ACB7C233F48A9A7EFBBFA /* Release */,
+				0BD6B48E07C54DE595104923 /* MinSizeRel */,
+				144F9AC18FDA401D8458D7C3 /* RelWithDebInfo */,
 			);
 			compatibilityVersion = "Xcode 3.2";
 			hasScannedForEncodings = 0;
-			mainGroup = 3D1820DABCCE41A6BE545C62;
+			mainGroup = 77CA0090C53743B1A602E868;
 			projectDirPath = /Users/rbq/works/AndroidStudioProjects/HalftoneAll/inksi_image_process;
 			projectRoot = "";
 			targets = (
@@ -397,41 +397,41 @@ fi
 /* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
-		D82152B2963C4347A382739E /* Sources */ = {
+		8042396DE7A245878F651B84 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				70AFBABA3802435B860EF3FE /* /Users/rbq/works/AndroidStudioProjects/HalftoneAll/inksi_image_process/src/inksi_image_api.cpp */,
+				92669A6800C74440959C13BA /* /Users/rbq/works/AndroidStudioProjects/HalftoneAll/inksi_image_process/src/inksi_image_api.cpp */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
-		4392C7EA07A24DC28D4887C5 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = 021626D5D4824669AADA4166 /* inksi_image */;
-			targetProxy = D15EE1659A7A441E938DDEB0 /* PBXContainerItemProxy */;
-		};
-		6D9924A0AB9240FFBD644833 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = 3FC7CC2B15CD4D66AE302E78 /* ZERO_CHECK */;
-			targetProxy = EBDA4E4444E2445F96B94A54 /* PBXContainerItemProxy */;
-		};
-		94A68C45EE174942B53FBDE0 /* PBXTargetDependency */ = {
+		3C2049C63E5B4910983A5F68 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = D96CAC765ED8423EB7EDD20B /* ALL_BUILD */;
-			targetProxy = 6D0E734F43C9426F9CED9085 /* PBXContainerItemProxy */;
+			targetProxy = B60CE223CFD74E5399B9D9A3 /* PBXContainerItemProxy */;
 		};
-		EF9805CEBADB4C8F8AB9FA3C /* PBXTargetDependency */ = {
+		A07DD621AAB64DDCA7A55DCD /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = 3FC7CC2B15CD4D66AE302E78 /* ZERO_CHECK */;
-			targetProxy = 8CA228E905064839B30C9975 /* PBXContainerItemProxy */;
+			targetProxy = 235CD21003C94110B8F8885F /* PBXContainerItemProxy */;
+		};
+		C6A8D694F08647D4ACA2AE64 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 3FC7CC2B15CD4D66AE302E78 /* ZERO_CHECK */;
+			targetProxy = 4821D0C423C84A49BEABFD13 /* PBXContainerItemProxy */;
+		};
+		F8627A9EC8AB41888B562469 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 021626D5D4824669AADA4166 /* inksi_image */;
+			targetProxy = E1EEC75D5A35490CB7FF7F4B /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
-		2C8930AC983F4C97A5809EE2 /* RelWithDebInfo */ = {
+		03466A86127C4FE790C5F4D7 /* RelWithDebInfo */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ARCHS = arm64;
@@ -458,47 +458,7 @@ fi
 			};
 			name = RelWithDebInfo;
 		};
-		2D5783A1CFF74565BFBA6D1D /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				COMBINE_HIDPI_IMAGES = YES;
-				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
-				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
-				GCC_OPTIMIZATION_LEVEL = 0;
-				GCC_PREPROCESSOR_DEFINITIONS = ("'CMAKE_INTDIR=\"$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)\"'","$(inherited)");
-				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
-				INSTALL_PATH = "";
-				OTHER_LDFLAGS = ("","$(inherited)");
-				OTHER_REZFLAGS = "";
-				PRODUCT_NAME = ZERO_CHECK;
-				SECTORDER_FLAGS = "";
-				SYMROOT = "/Users/rbq/works/AndroidStudioProjects/HalftoneAll/inksi_image_process/build-ios";
-				USE_HEADERMAP = NO;
-				WARNING_CFLAGS = ("$(inherited)");
-			};
-			name = Debug;
-		};
-		3B6C414574EE4781A820AACF /* RelWithDebInfo */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				COMBINE_HIDPI_IMAGES = YES;
-				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
-				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
-				GCC_OPTIMIZATION_LEVEL = 0;
-				GCC_PREPROCESSOR_DEFINITIONS = ("'CMAKE_INTDIR=\"$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)\"'","$(inherited)");
-				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
-				INSTALL_PATH = "";
-				OTHER_LDFLAGS = ("","$(inherited)");
-				OTHER_REZFLAGS = "";
-				PRODUCT_NAME = ZERO_CHECK;
-				SECTORDER_FLAGS = "";
-				SYMROOT = "/Users/rbq/works/AndroidStudioProjects/HalftoneAll/inksi_image_process/build-ios";
-				USE_HEADERMAP = NO;
-				WARNING_CFLAGS = ("$(inherited)");
-			};
-			name = RelWithDebInfo;
-		};
-		3F6AA325DC534E198B36D7F1 /* RelWithDebInfo */ = {
+		21214B0215004595B7D8AFF4 /* RelWithDebInfo */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				COMBINE_HIDPI_IMAGES = YES;
@@ -518,7 +478,7 @@ fi
 			};
 			name = RelWithDebInfo;
 		};
-		451B6237A9664F72AFD44E95 /* Debug */ = {
+		29A0003EB23E44EE964FEEB7 /* RelWithDebInfo */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				COMBINE_HIDPI_IMAGES = YES;
@@ -530,24 +490,15 @@ fi
 				INSTALL_PATH = "";
 				OTHER_LDFLAGS = ("","$(inherited)");
 				OTHER_REZFLAGS = "";
-				PRODUCT_NAME = install;
+				PRODUCT_NAME = ZERO_CHECK;
 				SECTORDER_FLAGS = "";
 				SYMROOT = "/Users/rbq/works/AndroidStudioProjects/HalftoneAll/inksi_image_process/build-ios";
 				USE_HEADERMAP = NO;
 				WARNING_CFLAGS = ("$(inherited)");
 			};
-			name = Debug;
+			name = RelWithDebInfo;
 		};
-		4A94E73396AA496B9F9C2B96 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ARCHS = arm64;
-				SDKROOT = iphoneos;
-				SYMROOT = "/Users/rbq/works/AndroidStudioProjects/HalftoneAll/inksi_image_process/build-ios/build";
-			};
-			name = Debug;
-		};
-		514912EF832646B9983C9C2A /* Debug */ = {
+		35BF9DF65E5B43EF9E01CE90 /* RelWithDebInfo */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				COMBINE_HIDPI_IMAGES = YES;
@@ -565,29 +516,9 @@ fi
 				USE_HEADERMAP = NO;
 				WARNING_CFLAGS = ("$(inherited)");
 			};
-			name = Debug;
+			name = RelWithDebInfo;
 		};
-		53150B639FFB4A9B9A84CB3D /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				COMBINE_HIDPI_IMAGES = YES;
-				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
-				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
-				GCC_OPTIMIZATION_LEVEL = 0;
-				GCC_PREPROCESSOR_DEFINITIONS = ("'CMAKE_INTDIR=\"$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)\"'","$(inherited)");
-				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
-				INSTALL_PATH = "";
-				OTHER_LDFLAGS = ("","$(inherited)");
-				OTHER_REZFLAGS = "";
-				PRODUCT_NAME = install;
-				SECTORDER_FLAGS = "";
-				SYMROOT = "/Users/rbq/works/AndroidStudioProjects/HalftoneAll/inksi_image_process/build-ios";
-				USE_HEADERMAP = NO;
-				WARNING_CFLAGS = ("$(inherited)");
-			};
-			name = Release;
-		};
-		5B87C04F21F24E0094404D79 /* Release */ = {
+		391A44A4F9D34295A8872912 /* MinSizeRel */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				COMBINE_HIDPI_IMAGES = YES;
@@ -605,9 +536,29 @@ fi
 				USE_HEADERMAP = NO;
 				WARNING_CFLAGS = ("$(inherited)");
 			};
-			name = Release;
+			name = MinSizeRel;
 		};
-		5C12A6AA869E4541B02D1250 /* Release */ = {
+		418B8BCF527F44568F7E7C68 /* MinSizeRel */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = ("'CMAKE_INTDIR=\"$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)\"'","$(inherited)");
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				INSTALL_PATH = "";
+				OTHER_LDFLAGS = ("","$(inherited)");
+				OTHER_REZFLAGS = "";
+				PRODUCT_NAME = ALL_BUILD;
+				SECTORDER_FLAGS = "";
+				SYMROOT = "/Users/rbq/works/AndroidStudioProjects/HalftoneAll/inksi_image_process/build-ios";
+				USE_HEADERMAP = NO;
+				WARNING_CFLAGS = ("$(inherited)");
+			};
+			name = MinSizeRel;
+		};
+		537EBA253A6941F58E29D095 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ARCHS = arm64;
@@ -634,7 +585,7 @@ fi
 			};
 			name = Release;
 		};
-		A19342DA15744FD9A5FD984D /* RelWithDebInfo */ = {
+		5D4AF32A2AB248B18F34B72B /* MinSizeRel */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				COMBINE_HIDPI_IMAGES = YES;
@@ -646,36 +597,7 @@ fi
 				INSTALL_PATH = "";
 				OTHER_LDFLAGS = ("","$(inherited)");
 				OTHER_REZFLAGS = "";
-				PRODUCT_NAME = ALL_BUILD;
-				SECTORDER_FLAGS = "";
-				SYMROOT = "/Users/rbq/works/AndroidStudioProjects/HalftoneAll/inksi_image_process/build-ios";
-				USE_HEADERMAP = NO;
-				WARNING_CFLAGS = ("$(inherited)");
-			};
-			name = RelWithDebInfo;
-		};
-		A9F3F448A1664B789EAD6568 /* MinSizeRel */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ARCHS = arm64;
-				SDKROOT = iphoneos;
-				SYMROOT = "/Users/rbq/works/AndroidStudioProjects/HalftoneAll/inksi_image_process/build-ios/build";
-			};
-			name = MinSizeRel;
-		};
-		ABC0E4E744BF4CD8B0F2A0E3 /* MinSizeRel */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				COMBINE_HIDPI_IMAGES = YES;
-				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
-				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
-				GCC_OPTIMIZATION_LEVEL = 0;
-				GCC_PREPROCESSOR_DEFINITIONS = ("'CMAKE_INTDIR=\"$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)\"'","$(inherited)");
-				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
-				INSTALL_PATH = "";
-				OTHER_LDFLAGS = ("","$(inherited)");
-				OTHER_REZFLAGS = "";
-				PRODUCT_NAME = ZERO_CHECK;
+				PRODUCT_NAME = install;
 				SECTORDER_FLAGS = "";
 				SYMROOT = "/Users/rbq/works/AndroidStudioProjects/HalftoneAll/inksi_image_process/build-ios";
 				USE_HEADERMAP = NO;
@@ -683,56 +605,7 @@ fi
 			};
 			name = MinSizeRel;
 		};
-		AC298EA9E0BB4BA897C2C30C /* MinSizeRel */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				COMBINE_HIDPI_IMAGES = YES;
-				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
-				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
-				GCC_OPTIMIZATION_LEVEL = 0;
-				GCC_PREPROCESSOR_DEFINITIONS = ("'CMAKE_INTDIR=\"$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)\"'","$(inherited)");
-				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
-				INSTALL_PATH = "";
-				OTHER_LDFLAGS = ("","$(inherited)");
-				OTHER_REZFLAGS = "";
-				PRODUCT_NAME = ALL_BUILD;
-				SECTORDER_FLAGS = "";
-				SYMROOT = "/Users/rbq/works/AndroidStudioProjects/HalftoneAll/inksi_image_process/build-ios";
-				USE_HEADERMAP = NO;
-				WARNING_CFLAGS = ("$(inherited)");
-			};
-			name = MinSizeRel;
-		};
-		C8AAB78B896E4EA8B023CDBD /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ARCHS = arm64;
-				SDKROOT = iphoneos;
-				SYMROOT = "/Users/rbq/works/AndroidStudioProjects/HalftoneAll/inksi_image_process/build-ios/build";
-			};
-			name = Release;
-		};
-		CD1AE1398E3C46BABC242AFB /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				COMBINE_HIDPI_IMAGES = YES;
-				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
-				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
-				GCC_OPTIMIZATION_LEVEL = 0;
-				GCC_PREPROCESSOR_DEFINITIONS = ("'CMAKE_INTDIR=\"$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)\"'","$(inherited)");
-				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
-				INSTALL_PATH = "";
-				OTHER_LDFLAGS = ("","$(inherited)");
-				OTHER_REZFLAGS = "";
-				PRODUCT_NAME = ALL_BUILD;
-				SECTORDER_FLAGS = "";
-				SYMROOT = "/Users/rbq/works/AndroidStudioProjects/HalftoneAll/inksi_image_process/build-ios";
-				USE_HEADERMAP = NO;
-				WARNING_CFLAGS = ("$(inherited)");
-			};
-			name = Release;
-		};
-		CDFD522165B44175987B0141 /* Debug */ = {
+		6306C440DD324DADBD33BB17 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ARCHS = arm64;
@@ -759,7 +632,25 @@ fi
 			};
 			name = Debug;
 		};
-		D722F2D574D740DA8BF0BC94 /* MinSizeRel */ = {
+		82D88924FB24409F9A101264 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = arm64;
+				SDKROOT = iphoneos;
+				SYMROOT = "/Users/rbq/works/AndroidStudioProjects/HalftoneAll/inksi_image_process/build-ios/build";
+			};
+			name = Release;
+		};
+		8F725C3A7B134B2EBB74EBF0 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = arm64;
+				SDKROOT = iphoneos;
+				SYMROOT = "/Users/rbq/works/AndroidStudioProjects/HalftoneAll/inksi_image_process/build-ios/build";
+			};
+			name = Debug;
+		};
+		969772E2029D49CBA0F1E874 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				COMBINE_HIDPI_IMAGES = YES;
@@ -771,15 +662,24 @@ fi
 				INSTALL_PATH = "";
 				OTHER_LDFLAGS = ("","$(inherited)");
 				OTHER_REZFLAGS = "";
-				PRODUCT_NAME = install;
+				PRODUCT_NAME = ZERO_CHECK;
 				SECTORDER_FLAGS = "";
 				SYMROOT = "/Users/rbq/works/AndroidStudioProjects/HalftoneAll/inksi_image_process/build-ios";
 				USE_HEADERMAP = NO;
 				WARNING_CFLAGS = ("$(inherited)");
 			};
-			name = MinSizeRel;
+			name = Release;
 		};
-		D8E17356F2804DD4ABBD626C /* MinSizeRel */ = {
+		9A9AB8B06AE5447AA20ACB48 /* RelWithDebInfo */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = arm64;
+				SDKROOT = iphoneos;
+				SYMROOT = "/Users/rbq/works/AndroidStudioProjects/HalftoneAll/inksi_image_process/build-ios/build";
+			};
+			name = RelWithDebInfo;
+		};
+		9F8B031CDF394D81AF7147DB /* MinSizeRel */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ARCHS = arm64;
@@ -806,69 +706,169 @@ fi
 			};
 			name = MinSizeRel;
 		};
-		F76BF381224E46A38D6875C0 /* RelWithDebInfo */ = {
+		A211F6DE5AFD4312BE78F798 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = ("'CMAKE_INTDIR=\"$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)\"'","$(inherited)");
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				INSTALL_PATH = "";
+				OTHER_LDFLAGS = ("","$(inherited)");
+				OTHER_REZFLAGS = "";
+				PRODUCT_NAME = ZERO_CHECK;
+				SECTORDER_FLAGS = "";
+				SYMROOT = "/Users/rbq/works/AndroidStudioProjects/HalftoneAll/inksi_image_process/build-ios";
+				USE_HEADERMAP = NO;
+				WARNING_CFLAGS = ("$(inherited)");
+			};
+			name = Debug;
+		};
+		B3183CF221E943CFB12E76D0 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = ("'CMAKE_INTDIR=\"$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)\"'","$(inherited)");
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				INSTALL_PATH = "";
+				OTHER_LDFLAGS = ("","$(inherited)");
+				OTHER_REZFLAGS = "";
+				PRODUCT_NAME = install;
+				SECTORDER_FLAGS = "";
+				SYMROOT = "/Users/rbq/works/AndroidStudioProjects/HalftoneAll/inksi_image_process/build-ios";
+				USE_HEADERMAP = NO;
+				WARNING_CFLAGS = ("$(inherited)");
+			};
+			name = Release;
+		};
+		F3A45BA37A0146869241649C /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = ("'CMAKE_INTDIR=\"$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)\"'","$(inherited)");
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				INSTALL_PATH = "";
+				OTHER_LDFLAGS = ("","$(inherited)");
+				OTHER_REZFLAGS = "";
+				PRODUCT_NAME = install;
+				SECTORDER_FLAGS = "";
+				SYMROOT = "/Users/rbq/works/AndroidStudioProjects/HalftoneAll/inksi_image_process/build-ios";
+				USE_HEADERMAP = NO;
+				WARNING_CFLAGS = ("$(inherited)");
+			};
+			name = Debug;
+		};
+		F831D1DBB18241D08B340452 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = ("'CMAKE_INTDIR=\"$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)\"'","$(inherited)");
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				INSTALL_PATH = "";
+				OTHER_LDFLAGS = ("","$(inherited)");
+				OTHER_REZFLAGS = "";
+				PRODUCT_NAME = ALL_BUILD;
+				SECTORDER_FLAGS = "";
+				SYMROOT = "/Users/rbq/works/AndroidStudioProjects/HalftoneAll/inksi_image_process/build-ios";
+				USE_HEADERMAP = NO;
+				WARNING_CFLAGS = ("$(inherited)");
+			};
+			name = Debug;
+		};
+		F9806009357C4549B9B3C013 /* MinSizeRel */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ARCHS = arm64;
 				SDKROOT = iphoneos;
 				SYMROOT = "/Users/rbq/works/AndroidStudioProjects/HalftoneAll/inksi_image_process/build-ios/build";
 			};
-			name = RelWithDebInfo;
+			name = MinSizeRel;
+		};
+		FA36156714FD415EBB91FA89 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = ("'CMAKE_INTDIR=\"$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)\"'","$(inherited)");
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				INSTALL_PATH = "";
+				OTHER_LDFLAGS = ("","$(inherited)");
+				OTHER_REZFLAGS = "";
+				PRODUCT_NAME = ALL_BUILD;
+				SECTORDER_FLAGS = "";
+				SYMROOT = "/Users/rbq/works/AndroidStudioProjects/HalftoneAll/inksi_image_process/build-ios";
+				USE_HEADERMAP = NO;
+				WARNING_CFLAGS = ("$(inherited)");
+			};
+			name = Release;
 		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		154D9CBAC445488DB9E53BBF /* Build configuration list for PBXAggregateTarget "ALL_BUILD" */ = {
+		1A069287536D4FE1929E9494 /* Build configuration list for PBXProject "inksi_image_process" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				514912EF832646B9983C9C2A /* Debug */,
-				CD1AE1398E3C46BABC242AFB /* Release */,
-				AC298EA9E0BB4BA897C2C30C /* MinSizeRel */,
-				A19342DA15744FD9A5FD984D /* RelWithDebInfo */,
+				8F725C3A7B134B2EBB74EBF0 /* Debug */,
+				82D88924FB24409F9A101264 /* Release */,
+				F9806009357C4549B9B3C013 /* MinSizeRel */,
+				9A9AB8B06AE5447AA20ACB48 /* RelWithDebInfo */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Debug;
 		};
-		172136C01BA44CA987946488 /* Build configuration list for PBXAggregateTarget "install" */ = {
+		41E46F50775E4F418AE7E2A3 /* Build configuration list for PBXAggregateTarget "ALL_BUILD" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				451B6237A9664F72AFD44E95 /* Debug */,
-				53150B639FFB4A9B9A84CB3D /* Release */,
-				D722F2D574D740DA8BF0BC94 /* MinSizeRel */,
-				3F6AA325DC534E198B36D7F1 /* RelWithDebInfo */,
+				F831D1DBB18241D08B340452 /* Debug */,
+				FA36156714FD415EBB91FA89 /* Release */,
+				418B8BCF527F44568F7E7C68 /* MinSizeRel */,
+				35BF9DF65E5B43EF9E01CE90 /* RelWithDebInfo */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Debug;
 		};
-		497C734DE8B747DDAF1D0218 /* Build configuration list for PBXAggregateTarget "ZERO_CHECK" */ = {
+		68B7AE65ED824049A46B9CDC /* Build configuration list for PBXAggregateTarget "ZERO_CHECK" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				2D5783A1CFF74565BFBA6D1D /* Debug */,
-				5B87C04F21F24E0094404D79 /* Release */,
-				ABC0E4E744BF4CD8B0F2A0E3 /* MinSizeRel */,
-				3B6C414574EE4781A820AACF /* RelWithDebInfo */,
+				A211F6DE5AFD4312BE78F798 /* Debug */,
+				969772E2029D49CBA0F1E874 /* Release */,
+				391A44A4F9D34295A8872912 /* MinSizeRel */,
+				29A0003EB23E44EE964FEEB7 /* RelWithDebInfo */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Debug;
 		};
-		92EF8E761C714E10A91D379C /* Build configuration list for PBXNativeTarget "inksi_image" */ = {
+		B40218C41C8342EA83127624 /* Build configuration list for PBXNativeTarget "inksi_image" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				CDFD522165B44175987B0141 /* Debug */,
-				5C12A6AA869E4541B02D1250 /* Release */,
-				D8E17356F2804DD4ABBD626C /* MinSizeRel */,
-				2C8930AC983F4C97A5809EE2 /* RelWithDebInfo */,
+				6306C440DD324DADBD33BB17 /* Debug */,
+				537EBA253A6941F58E29D095 /* Release */,
+				9F8B031CDF394D81AF7147DB /* MinSizeRel */,
+				03466A86127C4FE790C5F4D7 /* RelWithDebInfo */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Debug;
 		};
-		DDE5090896394A64B5D72C7E /* Build configuration list for PBXProject "inksi_image_process" */ = {
+		DF34BA421D954B3A882E7422 /* Build configuration list for PBXAggregateTarget "install" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				4A94E73396AA496B9F9C2B96 /* Debug */,
-				C8AAB78B896E4EA8B023CDBD /* Release */,
-				A9F3F448A1664B789EAD6568 /* MinSizeRel */,
-				F76BF381224E46A38D6875C0 /* RelWithDebInfo */,
+				F3A45BA37A0146869241649C /* Debug */,
+				B3183CF221E943CFB12E76D0 /* Release */,
+				5D4AF32A2AB248B18F34B72B /* MinSizeRel */,
+				21214B0215004595B7D8AFF4 /* RelWithDebInfo */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Debug;
