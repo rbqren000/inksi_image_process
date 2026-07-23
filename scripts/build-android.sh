@@ -4,10 +4,18 @@ set -euo pipefail
 # ============================================================
 # Android 编译脚本（macOS/Linux）
 # 从源码编译 OpenCV 4.13.0 + 合并到 inksi_image.a
-# 产物: inksi_image-android-arm64-v8a.a（自包含 OpenCV）
+# 产物: inksi_image-android-{ABI}.a（自包含 OpenCV）
+# 用法: ./build-android.sh [arm64-v8a|armeabi-v7a]  (默认 arm64-v8a)
 # ============================================================
 SCRIPT_DIR="$(cd "$(dirname "$0")/.." && pwd)"
 OPENCV_VERSION="4.13.0"
+ABI="${1:-arm64-v8a}"
+
+if [[ "$ABI" != "arm64-v8a" && "$ABI" != "armeabi-v7a" ]]; then
+    echo "Error: unsupported ABI '$ABI'. Use arm64-v8a or armeabi-v7a"
+    exit 1
+fi
+echo "=== Building for ABI: $ABI ==="
 
 # 检查 NDK
 if [ -z "${ANDROID_NDK_HOME:-}" ]; then
@@ -24,10 +32,10 @@ fi
 echo "NDK: $ANDROID_NDK_HOME"
 
 # 编译 OpenCV 静态库（flags 变更时自动清理旧缓存）
-OPENCV_INSTALL_DIR="/tmp/opencv-android-install"
+OPENCV_INSTALL_DIR="/tmp/opencv-android-install-$ABI"
 _OCV_FLAGS_FILE="$OPENCV_INSTALL_DIR/.opencv_flags"
 
-_OCV_FLAGS="-DCMAKE_TOOLCHAIN_FILE=$ANDROID_NDK_HOME/build/cmake/android.toolchain.cmake -DANDROID_ABI=arm64-v8a -DANDROID_PLATFORM=android-21 -DBUILD_SHARED_LIBS=OFF -DBUILD_LIST=core,imgproc -DWITH_KLEIDICV=OFF -DCMAKE_INSTALL_PREFIX=$OPENCV_INSTALL_DIR -DBUILD_EXAMPLES=OFF -DBUILD_TESTS=OFF -DBUILD_PERF_TESTS=OFF -DBUILD_opencv_apps=OFF -DBUILD_JAVA=OFF -DBUILD_PYTHON=OFF -DBUILD_opencv_js=OFF -DBUILD_opencv_ts=OFF -DBUILD_ANDROID_EXAMPLES=OFF -DWITH_IPP=OFF -DWITH_TBB=OFF -DWITH_OPENMP=OFF -DWITH_OPENCL=OFF -DWITH_CUDA=OFF -DWITH_FFMPEG=OFF -DWITH_GSTREAMER=OFF -DWITH_V4L=OFF -DWITH_GTK=OFF -DWITH_QT=OFF -DWITH_OPENEXR=OFF -DWITH_AVIF=OFF -DWITH_WEBP=OFF -DWITH_JASPER=OFF -DENABLE_PRECOMPILED_HEADERS=OFF -DCMAKE_BUILD_TYPE=Release -Wno-dev"
+_OCV_FLAGS="-DCMAKE_TOOLCHAIN_FILE=$ANDROID_NDK_HOME/build/cmake/android.toolchain.cmake -DANDROID_ABI=$ABI -DANDROID_PLATFORM=android-21 -DBUILD_SHARED_LIBS=OFF -DBUILD_LIST=core,imgproc -DWITH_KLEIDICV=OFF -DCMAKE_INSTALL_PREFIX=$OPENCV_INSTALL_DIR -DBUILD_EXAMPLES=OFF -DBUILD_TESTS=OFF -DBUILD_PERF_TESTS=OFF -DBUILD_opencv_apps=OFF -DBUILD_JAVA=OFF -DBUILD_PYTHON=OFF -DBUILD_opencv_js=OFF -DBUILD_opencv_ts=OFF -DBUILD_ANDROID_EXAMPLES=OFF -DWITH_IPP=OFF -DWITH_TBB=OFF -DWITH_OPENMP=OFF -DWITH_OPENCL=OFF -DWITH_CUDA=OFF -DWITH_FFMPEG=OFF -DWITH_GSTREAMER=OFF -DWITH_V4L=OFF -DWITH_GTK=OFF -DWITH_QT=OFF -DWITH_OPENEXR=OFF -DWITH_AVIF=OFF -DWITH_WEBP=OFF -DWITH_JASPER=OFF -DENABLE_PRECOMPILED_HEADERS=OFF -DCMAKE_BUILD_TYPE=Release -Wno-dev"
 
 _NEED_BUILD=false
 if [ ! -f "$OPENCV_INSTALL_DIR/sdk/native/jni/OpenCVConfig.cmake" ]; then
@@ -39,13 +47,13 @@ elif [ ! -f "$_OCV_FLAGS_FILE" ] || [ "$_OCV_FLAGS" != "$(cat "$_OCV_FLAGS_FILE"
 fi
 
 if $_NEED_BUILD; then
-    echo "Building OpenCV $OPENCV_VERSION for Android (arm64-v8a) from source..."
+    echo "Building OpenCV $OPENCV_VERSION for Android ($ABI) from source..."
     if [ ! -d "/tmp/opencv-${OPENCV_VERSION}" ]; then
         curl -L -o "/tmp/opencv-${OPENCV_VERSION}.zip" \
             "https://github.com/opencv/opencv/archive/refs/tags/${OPENCV_VERSION}.zip"
         unzip -q "/tmp/opencv-${OPENCV_VERSION}.zip" -d /tmp/
     fi
-    mkdir -p /tmp/opencv-android-build && cd /tmp/opencv-android-build
+    mkdir -p "/tmp/opencv-android-build-$ABI" && cd "/tmp/opencv-android-build-$ABI"
     # shellcheck disable=SC2086
     cmake "/tmp/opencv-${OPENCV_VERSION}" $_OCV_FLAGS
     cmake --build . -j"$(sysctl -n hw.ncpu 2>/dev/null || nproc)"
@@ -57,12 +65,13 @@ else
 fi
 
 # 编译 inksi_image（此时仅含自己代码，不含 OpenCV）
-echo "Building inksi_image for Android arm64-v8a..."
-mkdir -p "$SCRIPT_DIR/build-android"
-cd "$SCRIPT_DIR/build-android"
+echo "Building inksi_image for Android $ABI..."
+BUILD_DIR="$SCRIPT_DIR/build-android-$ABI"
+mkdir -p "$BUILD_DIR"
+cd "$BUILD_DIR"
 cmake "$SCRIPT_DIR" \
     -DCMAKE_TOOLCHAIN_FILE="$ANDROID_NDK_HOME/build/cmake/android.toolchain.cmake" \
-    -DANDROID_ABI=arm64-v8a \
+    -DANDROID_ABI=$ABI \
     -DANDROID_PLATFORM=android-21 \
     -DOpenCV_DIR="$OPENCV_INSTALL_DIR/sdk/native/jni" \
     -DINKSI_USE_OPENCV=ON \
@@ -95,5 +104,6 @@ echo "end" >> "$MRI"
 "$AR_CMD" -M < "$MRI"
 rm -f "$MRI" libinksi_image_own.a
 
-cp libinksi_image.a "$SCRIPT_DIR/inksi_image-android-arm64-v8a.a"
-echo "Done: $SCRIPT_DIR/inksi_image-android-arm64-v8a.a ($(du -h "$SCRIPT_DIR/inksi_image-android-arm64-v8a.a" | cut -f1))"
+OUTPUT="$SCRIPT_DIR/inksi_image-android-$ABI.a"
+cp libinksi_image.a "$OUTPUT"
+echo "Done: $OUTPUT ($(du -h "$OUTPUT" | cut -f1))"
