@@ -67,8 +67,14 @@ if [ -z "$ARTIFACT" ]; then
 fi
 
 # 合并 OpenCV 静态库到 inksi_image.a
-echo "Merging OpenCV static libs..."
-OPENCV_LIBS=$(find "$OPENCV_INSTALL_DIR" -name '*.a' | sort | tr '\n' ' ')
+#
+# 【务必排除 OpenCV 自带的 zlib（libzlib.a）】
+# iOS 端 OpenCV 以静态库参与链接，若把它自带的 zlib 一并打进本库，链接 InksiSDK.framework 时
+# 它会在链接顺序上先于我们 vendored 的 zlib.xcframework 满足 compress2/uncompress/inflate 等引用，
+# 导致 SDK 的 zlib 实际变成 OpenCV 那份（1.3.1），与其余五端使用的 1.3.2 不一致，且静默漂移。
+# 剔除后 OpenCV 的 zlib 引用由我们的 zlib 提供：所需符号与 ABI 已逐一核对兼容。
+echo "Merging OpenCV static libs (excluding bundled zlib)..."
+OPENCV_LIBS=$(find "$OPENCV_INSTALL_DIR" -name '*.a' ! -name 'libzlib.a' | sort | tr '\n' ' ')
 libtool -static -o merged.a "$ARTIFACT" $OPENCV_LIBS
 cp merged.a "$ARTIFACT"
 rm -f merged.a

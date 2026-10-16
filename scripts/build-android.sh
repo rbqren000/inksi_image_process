@@ -64,6 +64,20 @@ else
     echo "OpenCV cached at $OPENCV_INSTALL_DIR"
 fi
 
+# OpenCV 的导出文件（OpenCVModules-release.cmake）会为未构建的 3rdparty（tiff/png/protobuf/ade）
+# 也写检查项，而 BUILD_LIST=core,imgproc 时这些文件不存在，find_package 会直接 FATAL。
+# 删掉指向不存在文件的检查行（target 定义保留，且不会被链接到）。幂等，每次构建都跑一遍。
+_OCV_MOD="$OPENCV_INSTALL_DIR/sdk/native/jni/abi-$ABI/OpenCVModules-release.cmake"
+if [ -f "$_OCV_MOD" ]; then
+    { grep -n '_cmake_import_check_files_for_' "$_OCV_MOD" || true; } | while IFS=: read -r _ln _rest; do
+        _rel=$(printf '%s' "$_rest" | sed -E 's/.*\$\{_IMPORT_PREFIX\}([^"]*)".*/\1/')
+        [ -f "$OPENCV_INSTALL_DIR$_rel" ] || echo "$_ln"
+    done | sort -rn | while read -r _ln; do
+        sed -i.bak "${_ln}d" "$_OCV_MOD"
+    done
+    rm -f "$_OCV_MOD.bak"
+fi
+
 # 编译 inksi_image（此时仅含自己代码，不含 OpenCV）
 echo "Building inksi_image for Android $ABI..."
 BUILD_DIR="$SCRIPT_DIR/build-android-$ABI"

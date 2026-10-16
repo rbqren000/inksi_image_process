@@ -70,3 +70,8 @@ if !errorlevel! neq 0 exit /b !errorlevel!
 
 copy /y Release\inksi_image.dll "%SCRIPT_DIR%\inksi_image-windows-x86_64.dll"
 echo Done: %SCRIPT_DIR%\inksi_image-windows-x86_64.dll
+
+REM 运行时命名产物：desktop FFI 直接按 'inksi_image.dll' 加载（无架构后缀）
+if not exist "%SCRIPT_DIR%\dist" mkdir "%SCRIPT_DIR%\dist"
+copy /y Release\inksi_image.dll "%SCRIPT_DIR%\dist\inksi_image.dll"
+echo Done (runtime): %SCRIPT_DIR%\dist\inksi_image.dll

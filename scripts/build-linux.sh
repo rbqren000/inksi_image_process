@@ -61,3 +61,8 @@ cmake --build . -j"$(nproc)"
 
 cp libinksi_image.so "$SCRIPT_DIR/inksi_image-linux-x86_64.so"
 echo "Done: $SCRIPT_DIR/inksi_image-linux-x86_64.so ($(du -h "$SCRIPT_DIR/inksi_image-linux-x86_64.so" | cut -f1))"
+
+# 运行时命名产物：desktop FFI 直接按 'libinksi_image.so' 加载（无架构后缀）
+mkdir -p "$SCRIPT_DIR/dist"
+cp libinksi_image.so "$SCRIPT_DIR/dist/libinksi_image.so"
+echo "Done (runtime): $SCRIPT_DIR/dist/libinksi_image.so ($(du -h "$SCRIPT_DIR/dist/libinksi_image.so" | cut -f1))"
