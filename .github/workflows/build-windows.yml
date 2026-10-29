@@ -27,7 +27,12 @@ jobs:
         shell: pwsh
         run: |
           $install = "C:\opencv-windows-install"
-          $ok = (Get-ChildItem -Path $install -Recurse -Filter "opencv_core*.lib" -ErrorAction SilentlyContinue).Count -gt 0
+          # 直接探测已知布局，不用 Get-ChildItem -Recurse 全盘遍历：
+          # 安装目录含数千个头文件/3rdparty 源，Windows runner 磁盘 IO 慢，递归要 2 分钟以上。
+          $ok = $false
+          foreach ($p in @("$install\x64\vc17\lib", "$install\x64\vc16\lib", "$install\lib\cmake\opencv4", $install)) {
+            if (Test-Path (Join-Path $p "OpenCVConfig.cmake")) { $ok = $true; break }
+          }
           if ($ok) {
             echo "ok=true" >> $env:GITHUB_OUTPUT
           } else {
