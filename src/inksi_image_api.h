@@ -20,14 +20,30 @@ typedef struct {
     int channels;     ///< 1=灰度, 3=RGB, 4=RGBA
 } InksiImage;
 
+// ============ 错误码（与 SDK ErrorCodes 同号，便于上层直接透传） ============
+
+/// 成功
+#define INKSI_IMAGE_OK                    0
+/// 参数非法（空指针 / 宽高非正 / 角点缺失）
+#define INKSI_IMAGE_ERR_INVALID_INPUT   105
+/// 处理失败（OpenCV 抛异常等未归类失败）
+#define INKSI_IMAGE_ERR_PROCESS_FAILED  903
+/// 内存不足（malloc / 图像分配失败）
+#define INKSI_IMAGE_ERR_OUT_OF_MEMORY   904
+/// 该平台/构建不支持此能力（未启用 OpenCV）
+#define INKSI_IMAGE_ERR_UNSUPPORTED     905
+
 /// 处理结果（调用方用 inksi_image_free_result 释放）
+///
+/// `error_code` 是唯一失败依据：0 表示成功，非 0 取 `INKSI_IMAGE_ERR_*`。
+/// 失败原因不跨边界回传文案——上层按 error_code 映射文案（国际化）；
+/// C 库只在 stderr 打印诊断信息（Android logcat / Xcode 控制台 / hilog 可见）。
 typedef struct {
     uint8_t* data;
     int width;
     int height;
     int channels;
-    int success;      ///< 0=失败, 1=成功
-    const char* error;///< 失败时的错误描述
+    int error_code;
 } InksiImageResult;
 
 /// 释放处理结果
