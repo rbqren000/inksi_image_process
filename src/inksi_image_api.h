@@ -2,6 +2,17 @@
 #include <stdint.h>
 #include <stddef.h>
 
+// ============ 版本 ============
+//
+// 2.0.0：ABI 不兼容变更——InksiImageResult 删除 success / error，
+//        改为单一 error_code（0 成功，非 0 见 INKSI_IMAGE_ERR_*）。
+//        所有链接方必须与头文件同批重编；旧二进制读新库会读错字段。
+
+#define INKSI_IMAGE_VERSION_MAJOR 2
+#define INKSI_IMAGE_VERSION_MINOR 0
+#define INKSI_IMAGE_VERSION_PATCH 0
+#define INKSI_IMAGE_VERSION_STRING "2.0.0"
+
 #ifdef __cplusplus
 extern "C" {
 #endif
