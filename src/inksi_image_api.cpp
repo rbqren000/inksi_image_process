@@ -103,9 +103,11 @@ INKSI_IMAGE_API InksiImageResult inksi_image_bitmap_to_rgb_bytes(const uint8_t* 
     if (!out) return make_error(INKSI_IMAGE_ERR_OUT_OF_MEMORY, "malloc failed");
     for (int i = 0; i < w * h; i++) {
         int src = i * 4, dst = i * 3;
-        out[dst]     = data[src + 2];
+        // 输出 R,G,B 顺序（与函数名 / 头文件注释 / 各端 ImageProcessor / halftone_min::rgb_to_gray 一致）
+        // 2.0.1 前此处误输出 B,G,R，导致「bitmapToRgbBytes → rgbToGray」链路红蓝权重互换
+        out[dst]     = data[src];
         out[dst + 1] = data[src + 1];
-        out[dst + 2] = data[src];
+        out[dst + 2] = data[src + 2];
     }
     return make_result(out, w, h, 3);
 }

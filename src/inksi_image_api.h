@@ -71,7 +71,7 @@ INKSI_IMAGE_API InksiImageResult inksi_image_resize_to_height(const uint8_t* dat
 /// 旋转（90°/180°/270°）
 INKSI_IMAGE_API InksiImageResult inksi_image_rotate(const uint8_t* data, int w, int h, int channels, double degrees);
 
-/// RGBA → BGR（打印机半色调引擎需要的格式）
+/// RGBA → RGB（3 字节/像素，R,G,B 顺序，可直接交给 rgb_to_gray 等下游）
 INKSI_IMAGE_API InksiImageResult inksi_image_bitmap_to_rgb_bytes(const uint8_t* data, int w, int h);
 
 /// RGBA → 灰度
