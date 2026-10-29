@@ -82,13 +82,13 @@ jobs:
           INSTALL=/tmp/opencv-android-install
           # Android 的 _IMPORT_PREFIX 指向 sdk/native（配置在 sdk/native/jni/abi-<abi>/ 下）
           PREFIX=$INSTALL/sdk/native
-          MODULES=$(find "$INSTALL" -name OpenCVModules.cmake | head -1)
+          MODULES=$(find "$INSTALL" -name "OpenCVModules*.cmake")
           # ar 拒绝空归档（no archive members），先编一个空对象再打包
           # 注意用 -x c 显式指定语言：mktemp 文件名无扩展名时 cc 会认不出
           EMPTY_O=/tmp/inksi_empty_$$.o
           cc -x c -c /dev/null -o "$EMPTY_O" 2>/dev/null || true
           {
-            grep -oE '\$\{_IMPORT_PREFIX\}[^"\)]*\.a' "$MODULES" 2>/dev/null \
+            grep -ohE '\$\{_IMPORT_PREFIX\}[^"\)]*\.a' $MODULES 2>/dev/null \
               | sed "s|\${_IMPORT_PREFIX}|$PREFIX|g"
             grep -rhoE "$INSTALL[^\"\)]*\.a" "$INSTALL" 2>/dev/null
           } | sort -u | while IFS= read -r lib; do

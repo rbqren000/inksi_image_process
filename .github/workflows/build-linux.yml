@@ -77,11 +77,11 @@ jobs:
         run: |
           INSTALL=/tmp/opencv-install
           PREFIX=$INSTALL
-          MODULES=$(find "$INSTALL" -name OpenCVModules.cmake | head -1)
+          MODULES=$(find "$INSTALL" -name "OpenCVModules*.cmake")
           EMPTY_O=/tmp/inksi_empty_$$.o
           cc -x c -c /dev/null -o "$EMPTY_O" 2>/dev/null || true
           {
-            grep -oE '\$\{_IMPORT_PREFIX\}[^\"\)]*\.a' "$MODULES" 2>/dev/null \
+            grep -ohE '\$\{_IMPORT_PREFIX\}[^\"\)]*\.a' $MODULES 2>/dev/null \
               | sed "s|\${_IMPORT_PREFIX}|$PREFIX|g"
             grep -rhoE "$INSTALL[^\"\)]*\.a" "$INSTALL" 2>/dev/null
           } | sort -u | while IFS= read -r lib; do
