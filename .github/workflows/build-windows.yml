@@ -21,18 +21,15 @@ jobs:
           path: C:\opencv-windows-install
           key: opencv-4.13.0-windows-x86_64-v3
 
-      # 缓存命中也要校验：安装目录里必须有 opencv_core 静态库，否则丢弃重建
+      # 缓存命中也要校验：安装目录里必须有 OpenCVConfig.cmake，否则丢弃重建
       - name: Verify OpenCV install (Windows)
         id: opencv-check
         shell: pwsh
         run: |
           $install = "C:\opencv-windows-install"
-          # 直接探测已知布局，不用 Get-ChildItem -Recurse 全盘遍历：
-          # 安装目录含数千个头文件/3rdparty 源，Windows runner 磁盘 IO 慢，递归要 2 分钟以上。
-          $ok = $false
-          foreach ($p in @("$install\x64\vc17\lib", "$install\x64\vc16\lib", "$install\lib\cmake\opencv4", $install)) {
-            if (Test-Path (Join-Path $p "OpenCVConfig.cmake")) { $ok = $true; break }
-          }
+          # 限定深度 3 的定向查找：覆盖 x64/<vcXX>/staticlib（VS 2026 是 vc18）等布局。
+          # 不用无限递归——安装目录含数千文件，Windows runner 慢 IO 下要 2 分钟以上。
+          $ok = (Get-ChildItem -Path $install -Filter "OpenCVConfig.cmake" -Recurse -Depth 3 -ErrorAction SilentlyContinue).Count -gt 0
           if ($ok) {
             echo "ok=true" >> $env:GITHUB_OUTPUT
           } else {
@@ -85,16 +82,42 @@ jobs:
         shell: pwsh
         run: |
           $install = "C:\opencv-windows-install"
-          $mods = Get-ChildItem -Path $install -Recurse -Filter "OpenCVModules*.cmake" -ErrorAction SilentlyContinue
-          $refs = Select-String -Path $mods.FullName -Pattern '\$\{_IMPORT_PREFIX\}([^"\)]*\.lib)' -AllMatches |
-            ForEach-Object { $_.Matches } | ForEach-Object { $_.Groups[1].Value } | Sort-Object -Unique
-          echo "matched libs: $($refs.Count)"
-          foreach ($rel in $refs) {
-            $full = Join-Path $install $rel
-            if (-not (Test-Path $full)) {
-              New-Item -ItemType Directory -Force -Path (Split-Path $full) | Out-Null
-              lib.exe /nologo /OUT:"$full" | Out-Null
-              echo "placeholder: $full"
+          # _IMPORT_PREFIX 由 CMake 按「配置文件目录向上 N 级」计算（N = get_filename_component 次数），
+          # Windows 的配置在 x64/vc18/staticlib 下，prefix 并不是 install 根，必须推导。
+          # 先编一个空 .obj：lib.exe 无输入时不一定能生成合法库，而非法 .lib 会让 link.exe 直接报错
+          $emptyC = Join-Path $env:TEMP "inksi_empty.c"
+          $emptyObj = Join-Path $env:TEMP "inksi_empty.obj"
+          Set-Content -Path $emptyC -Value "" -Encoding ASCII
+          cl.exe /nologo /c "$emptyC" /Fo"$emptyObj" 2>$null | Out-Null
+          Write-Host "empty obj: $(Test-Path $emptyObj)"
+
+          $mods = Get-ChildItem -Path $install -Filter "OpenCVModules*.cmake" -Recurse -Depth 4 -ErrorAction SilentlyContinue
+          foreach ($f in $mods) {
+            $n = (Select-String -Path $f.FullName -Pattern 'get_filename_component\(_IMPORT_PREFIX').Count
+            if ($n -eq 0) {
+              $main = Join-Path $f.DirectoryName "OpenCVModules.cmake"
+              if (Test-Path $main) {
+                $n = (Select-String -Path $main -Pattern 'get_filename_component\(_IMPORT_PREFIX').Count
+              }
+            }
+            if ($n -le 0) { continue }
+            $p = $f.DirectoryName
+            for ($i = 1; $i -lt $n; $i++) { $p = Split-Path $p -Parent }
+            Write-Host "config=$($f.Name) n=$n prefix=$p"
+            $refs = Select-String -Path $f.FullName -Pattern '\$\{_IMPORT_PREFIX\}([^"\)]*\.lib)' -AllMatches |
+              ForEach-Object { $_.Matches } | ForEach-Object { $_.Groups[1].Value } | Sort-Object -Unique
+            foreach ($rel in $refs) {
+              $full = Join-Path $p $rel
+              if (-not (Test-Path $full)) {
+                New-Item -ItemType Directory -Force -Path (Split-Path $full) | Out-Null
+                if (Test-Path $emptyObj) {
+                  lib.exe /nologo /OUT:"$full" "$emptyObj" | Out-Null
+                } else {
+                  lib.exe /nologo /OUT:"$full" | Out-Null
+                }
+                if (-not (Test-Path $full)) { New-Item -ItemType File -Path $full | Out-Null }
+                Write-Host "placeholder: $full"
+              }
             }
           }
 
