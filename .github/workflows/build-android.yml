@@ -83,22 +83,31 @@ jobs:
           # Android 的 _IMPORT_PREFIX 指向 sdk/native（配置在 sdk/native/jni/abi-<abi>/ 下）
           PREFIX=$INSTALL/sdk/native
           MODULES=$(find "$INSTALL" -name "OpenCVModules*.cmake")
+          echo "MODULES=$MODULES"
+          echo "PREFIX=$PREFIX"
           # ar 拒绝空归档（no archive members），先编一个空对象再打包
           # 注意用 -x c 显式指定语言：mktemp 文件名无扩展名时 cc 会认不出
           EMPTY_O=/tmp/inksi_empty_$$.o
           cc -x c -c /dev/null -o "$EMPTY_O" 2>/dev/null || true
+          echo "EMPTY_O exists: $([ -f "$EMPTY_O" ] && echo yes || echo no)"
           {
+            # 配置里大多写作 ${_IMPORT_PREFIX}/...，必须展开成真实路径才能判断
             grep -ohE '\$\{_IMPORT_PREFIX\}[^"\)]*\.a' $MODULES 2>/dev/null \
               | sed "s|\${_IMPORT_PREFIX}|$PREFIX|g"
+            # 少数位置直接写绝对路径
             grep -rhoE "$INSTALL[^\"\)]*\.a" "$INSTALL" 2>/dev/null
-          } | sort -u | while IFS= read -r lib; do
+          } | sort -u | tee /tmp/inki_libs.txt
+          echo "matched libs: $(wc -l < /tmp/inki_libs.txt)"
+          while IFS= read -r lib; do
             if [ ! -f "$lib" ]; then
               mkdir -p "$(dirname "$lib")"
               if [ -f "$EMPTY_O" ]; then ar rcs "$lib" "$EMPTY_O"; else touch "$lib"; fi
               echo "placeholder: $lib"
             fi
-          done
-          rm -f "$EMPTY_O"
+          done < /tmp/inki_libs.txt
+          rm -f "$EMPTY_O" /tmp/inki_libs.txt
+          echo "=== 3rdparty 目录现状:"
+          find "$INSTALL/sdk/native/3rdparty" -name "*.a" 2>/dev/null | head -10
 
       - name: Build inksi_image for Android arm64-v8a
         run: |
