@@ -31,5 +31,6 @@ inksi_image_free_result(&result);
 
 | 版本 | 变更 |
 |------|------|
+| 2.0.1 | 行为修复：`inksi_image_bitmap_to_rgb_bytes` 由误输出的 `B,G,R` 改为 `R,G,B`（ABI 不变，但输出顺序变了，使用该函数的产物需重编）。 |
 | 2.0.0 | **ABI 不兼容**：`InksiImageResult` 删除 `success` / `error`，改为单一 `error_code`（`0` 成功；`105` 参数非法、`903` 处理失败、`904` 内存不足、`905` 未启用 OpenCV）。失败诊断只写 stderr，不跨边界；文案由调用方按码映射（便于国际化）。所有链接方必须与头文件同批重编。 |
 | 1.0.x | `success` + `const char* error` 双字段 |

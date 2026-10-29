@@ -7,11 +7,14 @@
 // 2.0.0：ABI 不兼容变更——InksiImageResult 删除 success / error，
 //        改为单一 error_code（0 成功，非 0 见 INKSI_IMAGE_ERR_*）。
 //        所有链接方必须与头文件同批重编；旧二进制读新库会读错字段。
+// 2.0.1：行为修复——inksi_image_bitmap_to_rgb_bytes 由误输出的 B,G,R
+//        改为 R,G,B（与函数名、各端 ImageProcessor、halftone_min::rgb_to_gray 一致）。
+//        ABI 不变，但输出字节顺序变了，使用该函数的产物需重编。
 
 #define INKSI_IMAGE_VERSION_MAJOR 2
 #define INKSI_IMAGE_VERSION_MINOR 0
-#define INKSI_IMAGE_VERSION_PATCH 0
-#define INKSI_IMAGE_VERSION_STRING "2.0.0"
+#define INKSI_IMAGE_VERSION_PATCH 1
+#define INKSI_IMAGE_VERSION_STRING "2.0.1"
 
 #ifdef __cplusplus
 extern "C" {
