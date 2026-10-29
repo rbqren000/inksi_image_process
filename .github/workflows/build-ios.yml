@@ -69,13 +69,22 @@ jobs:
       - name: Patch missing OpenCV 3rdparty archives (iOS)
         run: |
           INSTALL=/tmp/opencv-ios-install
-          grep -rhoE "$INSTALL[^\"\)]*\.a" "$INSTALL" 2>/dev/null | sort -u | while IFS= read -r lib; do
+          PREFIX=$INSTALL
+          MODULES=$(find "$INSTALL" -name OpenCVModules.cmake | head -1)
+          EMPTY_C=$(mktemp); : > "$EMPTY_C"; EMPTY_O="$EMPTY_C.o"
+          cc -c "$EMPTY_C" -o "$EMPTY_O" 2>/dev/null || true
+          {
+            grep -oE '\$\{_IMPORT_PREFIX\}[^"\)]*\.a' "$MODULES" 2>/dev/null \
+              | sed "s|\${_IMPORT_PREFIX}|$PREFIX|g"
+            grep -rhoE "$INSTALL[^\"\)]*\.a" "$INSTALL" 2>/dev/null
+          } | sort -u | while IFS= read -r lib; do
             if [ ! -f "$lib" ]; then
               mkdir -p "$(dirname "$lib")"
-              ar rcs "$lib"
+              if [ -f "$EMPTY_O" ]; then ar rcs "$lib" "$EMPTY_O"; else touch "$lib"; fi
               echo "placeholder: $lib"
             fi
           done
+          rm -f "$EMPTY_C" "$EMPTY_O"
 
       - name: Build inksi_image for iOS arm64
         run: |
