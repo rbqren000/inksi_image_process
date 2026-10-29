@@ -135,13 +135,19 @@ jobs:
         run: |
           cd build-android-${{ matrix.abi }}
           MRI=merge_opencv.mri
-          echo "create libinksi_image.a" > $MRI
-          find /tmp/opencv-android-install-${{ matrix.abi }} -name '*.a' | sort | while read lib; do
+          # 关键：输出到临时名，避免 create 覆盖 CMake 编出的 libinksi_image.a（自身目标文件会全丢）
+          echo "create libinksi_image_merged.a" > $MRI
+          echo "addlib libinksi_image.a" >> $MRI
+          # 占位库是我们补的空归档（含 x86_64 空对象），跳过以免污染目标架构
+          find /tmp/opencv-android-install-${{ matrix.abi }} -name '*.a' \
+            | grep -v -E '/(liblibprotobuf|libade)\.a$' \
+            | sort | while read lib; do
             echo "addlib $lib" >> $MRI
           done
           echo "save" >> $MRI
           echo "end" >> $MRI
           ar -M < $MRI
+          mv libinksi_image_merged.a libinksi_image.a
           rm -f $MRI
           echo "Merged. Size: $(ls -lh libinksi_image.a | awk '{print $5}')"
 

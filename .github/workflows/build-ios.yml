@@ -114,7 +114,9 @@ jobs:
         run: |
           ARTIFACT=$(find build-ios -name "libinksi_image.a" -type f | head -1)
           echo "Found artifact: $ARTIFACT"
-          OPENCV_LIBS=$(find /tmp/opencv-ios-install -name '*.a' | sort | tr '\n' ' ')
+          # 排除占位库（liblibprotobuf/libade 是我们补的空归档，含宿主机架构空对象）
+          OPENCV_LIBS=$(find /tmp/opencv-ios-install -name '*.a' \
+            | grep -v -E '/(liblibprotobuf|libade)\.a$' | sort | tr '\n' ' ')
           libtool -static -o build-ios/inksi_image_merged.a "$ARTIFACT" $OPENCV_LIBS
           cp build-ios/inksi_image_merged.a "$ARTIFACT"
           rm -f build-ios/inksi_image_merged.a
