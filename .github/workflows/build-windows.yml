@@ -19,19 +19,36 @@ jobs:
         uses: actions/cache@v4
         with:
           path: C:\opencv-windows-install
-          key: opencv-4.13.0-windows-x86_64-v2
+          key: opencv-4.13.0-windows-x86_64-v3
 
-      - name: Build OpenCV from source (Windows x86_64)
-        if: steps.cache-opencv.outputs.cache-hit != 'true'
+      # 缓存命中也要校验：安装目录里必须有 opencv_core 静态库，否则丢弃重建
+      - name: Verify OpenCV install (Windows)
+        id: opencv-check
         shell: pwsh
         run: |
-          curl -L -o "${{ runner.temp }}\opencv-4.13.0.zip" https://github.com/opencv/opencv/archive/refs/tags/4.13.0.zip
+          $install = "C:\opencv-windows-install"
+          $ok = (Get-ChildItem -Path $install -Recurse -Filter "opencv_core*.lib" -ErrorAction SilentlyContinue).Count -gt 0
+          if ($ok) {
+            echo "ok=true" >> $env:GITHUB_OUTPUT
+          } else {
+            Write-Host "OpenCV 安装不完整，丢弃后重建"
+            Remove-Item -Recurse -Force $install -ErrorAction SilentlyContinue
+            echo "ok=false" >> $env:GITHUB_OUTPUT
+          }
+
+      - name: Build OpenCV from source (Windows x86_64)
+        if: steps.cache-opencv.outputs.cache-hit != 'true' || steps.opencv-check.outputs.ok != 'true'
+        shell: pwsh
+        run: |
+          curl.exe -L -o "${{ runner.temp }}\opencv-4.13.0.zip" https://github.com/opencv/opencv/archive/refs/tags/4.13.0.zip
           7z x "${{ runner.temp }}\opencv-4.13.0.zip" -o"${{ runner.temp }}" -y
           mkdir "${{ runner.temp }}\opencv-win-build"
           cd "${{ runner.temp }}\opencv-win-build"
+          # 注意：PowerShell 会把参数里的逗号当数组/参数列表分隔符，
+          # -DBUILD_LIST=core,imgproc 必须整体加引号，否则 ParserError
           cmake "${{ runner.temp }}\opencv-4.13.0" `
-            -DBUILD_SHARED_LIBS=OFF `
-            -DBUILD_LIST=core,imgproc `
+            "-DBUILD_SHARED_LIBS=OFF" `
+            "-DBUILD_LIST=core,imgproc" `
             -DCMAKE_INSTALL_PREFIX=C:\opencv-windows-install `
             -DBUILD_EXAMPLES=OFF -DBUILD_TESTS=OFF -DBUILD_PERF_TESTS=OFF `
             -DBUILD_opencv_apps=OFF -DBUILD_JAVA=OFF -DBUILD_PYTHON=OFF `
@@ -41,6 +58,9 @@ jobs:
             -DWITH_GSTREAMER=OFF -DWITH_V4L=OFF -DWITH_GTK=OFF -DWITH_QT=OFF `
             -DWITH_OPENEXR=OFF `
             -DWITH_AVIF=OFF -DWITH_WEBP=OFF -DWITH_JASPER=OFF `
+            -DWITH_TIFF=OFF -DWITH_JPEG=OFF -DWITH_PNG=OFF -DWITH_OPENJPEG=OFF `
+            -DWITH_IMGCODEC_HDR=OFF -DWITH_IMGCODEC_SUNRASTER=OFF `
+            -DWITH_IMGCODEC_PXM=OFF -DWITH_IMGCODEC_PFM=OFF `
             -DWITH_EIGEN=OFF `
             -DENABLE_PRECOMPILED_HEADERS=OFF `
             -DCMAKE_BUILD_TYPE=Release

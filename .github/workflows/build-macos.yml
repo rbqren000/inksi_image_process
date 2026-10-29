@@ -25,10 +25,23 @@ jobs:
         uses: actions/cache@v4
         with:
           path: /tmp/opencv-macos-${{ matrix.arch }}
-          key: opencv-${{ env.OPENCV_VERSION }}-macos-${{ matrix.arch }}-v2
+          key: opencv-${{ env.OPENCV_VERSION }}-macos-${{ matrix.arch }}-v3
+
+      # 缓存命中也要校验：安装目录缺 OpenCVConfig.cmake 就丢弃重建
+      - name: Verify OpenCV install (macOS ${{ matrix.arch }})
+        id: opencv-check
+        run: |
+          INSTALL=/tmp/opencv-macos-${{ matrix.arch }}
+          if [ -f "$INSTALL/lib/cmake/opencv4/OpenCVConfig.cmake" ]; then
+            echo "ok=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "OpenCV 安装不完整，丢弃后重建"
+            rm -rf "$INSTALL"
+            echo "ok=false" >> "$GITHUB_OUTPUT"
+          fi
 
       - name: Build OpenCV from source (${{ matrix.arch }})
-        if: steps.cache-opencv.outputs.cache-hit != 'true'
+        if: steps.cache-opencv.outputs.cache-hit != 'true' || steps.opencv-check.outputs.ok != 'true'
         working-directory: /tmp
         run: |
           wget -q https://github.com/opencv/opencv/archive/refs/tags/${{ env.OPENCV_VERSION }}.zip
@@ -49,10 +62,27 @@ jobs:
             -DWITH_GSTREAMER=OFF -DWITH_V4L=OFF -DWITH_GTK=OFF -DWITH_QT=OFF \
             -DWITH_OPENEXR=OFF \
             -DWITH_AVIF=OFF -DWITH_WEBP=OFF -DWITH_JASPER=OFF \
+            -DWITH_TIFF=OFF -DWITH_JPEG=OFF -DWITH_PNG=OFF -DWITH_OPENJPEG=OFF \
+            -DWITH_IMGCODEC_HDR=OFF -DWITH_IMGCODEC_SUNRASTER=OFF \
+            -DWITH_IMGCODEC_PXM=OFF -DWITH_IMGCODEC_PFM=OFF \
             -DWITH_EIGEN=OFF \
             -DENABLE_PRECOMPILED_HEADERS=OFF
           cmake --build . -j$(sysctl -n hw.ncpu)
           cmake --install .
+
+      # OpenCV 的 install(EXPORT) 会列出 imgcodecs 的 3rdparty 目标（libtiff / libjpeg / libpng 等），
+      # 而这些模块已被 BUILD_LIST 裁掉、库未构建，find_package 会因缺文件失败。
+      # 不使用 imgcodecs，链接器不会拉取这些符号，用空归档占位补齐配置。
+      - name: Patch missing OpenCV 3rdparty archives (macOS ${{ matrix.arch }})
+        run: |
+          INSTALL=/tmp/opencv-macos-${{ matrix.arch }}
+          grep -rhoE "$INSTALL[^\"\)]*\.a" "$INSTALL" 2>/dev/null | sort -u | while IFS= read -r lib; do
+            if [ ! -f "$lib" ]; then
+              mkdir -p "$(dirname "$lib")"
+              ar rcs "$lib"
+              echo "placeholder: $lib"
+            fi
+          done
 
       - name: Build inksi_image (${{ matrix.arch }})
         run: |

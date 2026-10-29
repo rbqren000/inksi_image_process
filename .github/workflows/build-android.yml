@@ -26,10 +26,23 @@ jobs:
         uses: actions/cache@v4
         with:
           path: /tmp/opencv-android-install
-          key: opencv-4.13.0-android-arm64-v8a-v2
+          key: opencv-4.13.0-android-arm64-v8a-v3
+
+      # 缓存命中也要校验：安装目录缺 OpenCVConfig.cmake 就丢弃重建
+      - name: Verify OpenCV install (Android)
+        id: opencv-check
+        run: |
+          INSTALL=/tmp/opencv-android-install
+          if [ -f "$INSTALL/sdk/native/jni/OpenCVConfig.cmake" ]; then
+            echo "ok=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "OpenCV 安装不完整，丢弃后重建"
+            rm -rf "$INSTALL"
+            echo "ok=false" >> "$GITHUB_OUTPUT"
+          fi
 
       - name: Build OpenCV from source (Android arm64-v8a)
-        if: steps.cache-opencv.outputs.cache-hit != 'true'
+        if: steps.cache-opencv.outputs.cache-hit != 'true' || steps.opencv-check.outputs.ok != 'true'
         run: |
           wget -q https://github.com/opencv/opencv/archive/refs/tags/4.13.0.zip -O /tmp/opencv-4.13.0.zip
           unzip -q /tmp/opencv-4.13.0.zip -d /tmp/
@@ -51,11 +64,30 @@ jobs:
             -DWITH_GSTREAMER=OFF -DWITH_V4L=OFF -DWITH_GTK=OFF -DWITH_QT=OFF \
             -DWITH_OPENEXR=OFF \
             -DWITH_AVIF=OFF -DWITH_WEBP=OFF -DWITH_JASPER=OFF \
+            -DWITH_TIFF=OFF -DWITH_JPEG=OFF -DWITH_PNG=OFF -DWITH_OPENJPEG=OFF \
+            -DWITH_IMGCODEC_HDR=OFF -DWITH_IMGCODEC_SUNRASTER=OFF \
+            -DWITH_IMGCODEC_PXM=OFF -DWITH_IMGCODEC_PFM=OFF \
             -DENABLE_PRECOMPILED_HEADERS=OFF \
             -DCMAKE_BUILD_TYPE=Release \
             -Wno-dev
           cmake --build . -j$(nproc)
           cmake --install .
+
+      # OpenCV 的 install(EXPORT) 会列出 imgcodecs 的 3rdparty 目标（libtiff / libjpeg / libpng 等），
+      # 而 BUILD_LIST=core,imgproc 已把这些模块裁掉、库根本没构建，
+      # find_package 会因为「imported target 引用的文件不存在」直接失败。
+      # 我们不使用 imgcodecs，链接器不会拉取这些库的符号，故用空归档占位补齐配置。
+      - name: Patch missing OpenCV 3rdparty archives (Android)
+        run: |
+          INSTALL=/tmp/opencv-android-install
+          grep -rhoE "$INSTALL[^\"\)]*\.a" "$INSTALL" 2>/dev/null | sort -u | while IFS= read -r lib; do
+            if [ ! -f "$lib" ]; then
+              mkdir -p "$(dirname "$lib")"
+              ar rcs "$lib"
+              echo "placeholder: $lib"
+            fi
+          done
+
       - name: Build inksi_image for Android arm64-v8a
         run: |
           mkdir -p build-android && cd build-android
