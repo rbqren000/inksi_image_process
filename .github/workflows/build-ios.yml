@@ -69,13 +69,26 @@ jobs:
       - name: Patch missing OpenCV 3rdparty archives (iOS)
         run: |
           INSTALL=/tmp/opencv-ios-install
-          PREFIX=$INSTALL
-          MODULES=$(find "$INSTALL" -name "OpenCVModules*.cmake")
+          # 3rdparty 的真实路径写在 OpenCVModules-release.cmake 里；_IMPORT_PREFIX 由 CMake
+          # 按「配置文件所在目录向上 N 级」计算（N = 文件里 get_filename_component 的调用次数），
+          # release 文件本身不含该计算，沿用同目录主文件的值。
           EMPTY_O=/tmp/inksi_empty_$$.o
           cc -x c -c /dev/null -o "$EMPTY_O" 2>/dev/null || true
           {
-            grep -ohE '\$\{_IMPORT_PREFIX\}[^"\)]*\.a' $MODULES 2>/dev/null \
-              | sed "s|\${_IMPORT_PREFIX}|$PREFIX|g"
+            find "$INSTALL" -name "OpenCVModules*.cmake" | while IFS= read -r f; do
+              n=$(grep -c 'get_filename_component(_IMPORT_PREFIX' "$f" 2>/dev/null || true)
+              n=${n:-0}
+              if [ "$n" -eq 0 ]; then
+                n=$(grep -c 'get_filename_component(_IMPORT_PREFIX' "$(dirname "$f")/OpenCVModules.cmake" 2>/dev/null || true)
+                n=${n:-0}
+              fi
+              [ "$n" -gt 0 ] || continue
+              p=$(dirname "$f"); i=1
+              while [ "$i" -lt "$n" ]; do p=$(dirname "$p"); i=$((i+1)); done
+              echo "config=$(basename "$f") n=$n prefix=$p" >&2
+              grep -oE '\$\{_IMPORT_PREFIX\}[^"\)]*\.a' "$f" 2>/dev/null \
+                | sed "s|\${_IMPORT_PREFIX}|$p|g"
+            done
             grep -rhoE "$INSTALL[^\"\)]*\.a" "$INSTALL" 2>/dev/null
           } | sort -u | while IFS= read -r lib; do
             if [ ! -f "$lib" ]; then
