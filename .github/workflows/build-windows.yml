@@ -68,6 +68,31 @@ jobs:
           cmake --build . --config Release -j
           if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
           cmake --install . --config Release
+
+      # OpenCV 的 install(EXPORT) 会列出 imgcodecs/dnn 的 3rdparty 目标（libprotobuf 等），
+      # 而这些模块已被 BUILD_LIST 裁掉、库未构建，find_package 会因缺文件失败。
+      # 不使用 imgcodecs/dnn，链接器不会拉取这些符号，用空 .lib 占位补齐配置。
+      # lib.exe 需要 VS 环境，用 msvc-dev-cmd 激活。
+      - uses: ilammy/msvc-dev-cmd@v1
+        with:
+          arch: x64
+      - name: Patch missing OpenCV 3rdparty libs (Windows)
+        shell: pwsh
+        run: |
+          $install = "C:\opencv-windows-install"
+          $mods = Get-ChildItem -Path $install -Recurse -Filter "OpenCVModules*.cmake" -ErrorAction SilentlyContinue
+          $refs = Select-String -Path $mods.FullName -Pattern '\$\{_IMPORT_PREFIX\}([^"\)]*\.lib)' -AllMatches |
+            ForEach-Object { $_.Matches } | ForEach-Object { $_.Groups[1].Value } | Sort-Object -Unique
+          echo "matched libs: $($refs.Count)"
+          foreach ($rel in $refs) {
+            $full = Join-Path $install $rel
+            if (-not (Test-Path $full)) {
+              New-Item -ItemType Directory -Force -Path (Split-Path $full) | Out-Null
+              lib.exe /nologo /OUT:"$full" | Out-Null
+              echo "placeholder: $full"
+            }
+          }
+
       - name: Build inksi_image for Windows x86_64
         shell: pwsh
         run: |
