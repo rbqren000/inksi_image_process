@@ -25,3 +25,6 @@ CMakeCache.txt
 CMakeFiles/
 cmake_install.cmake
 Makefile
+
+# Gradle
+.gradle/
