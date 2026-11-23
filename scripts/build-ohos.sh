@@ -66,6 +66,38 @@ else
     echo "OpenCV cached at $OPENCV_INSTALL_DIR"
 fi
 
+# ── 补齐 3rdparty 占位库 ──
+# BUILD_LIST=core,imgproc 时 libtiff/libpng/libprotobuf/ade 实际不参与链接，
+# 但 install 出来的 OpenCVModules.cmake 仍按导入目标校验文件存在性，
+# 缺文件会让 find_package 直接失败。CI 的做法是给缺失路径塞一个空 .a，
+# 本地脚本此前漏了这一步，导致首次编 OHOS 卡在配置阶段。
+if command -v cc >/dev/null 2>&1 && command -v ar >/dev/null 2>&1; then
+    _EMPTY_O="/tmp/inksi_empty_ohos_$$.o"
+    cc -x c -c /dev/null -o "$_EMPTY_O" 2>/dev/null || true
+    {
+        find "$OPENCV_INSTALL_DIR" -name "OpenCVModules*.cmake" | while IFS= read -r f; do
+            n=$(grep -c 'get_filename_component(_IMPORT_PREFIX' "$f" 2>/dev/null || true)
+            n=${n:-0}
+            if [ "$n" -eq 0 ]; then
+                n=$(grep -c 'get_filename_component(_IMPORT_PREFIX' "$(dirname "$f")/OpenCVModules.cmake" 2>/dev/null || true)
+                n=${n:-0}
+            fi
+            [ "$n" -gt 0 ] || continue
+            p=$(dirname "$f"); i=1
+            while [ "$i" -lt "$n" ]; do p=$(dirname "$p"); i=$((i+1)); done
+            grep -oE '\$\{_IMPORT_PREFIX\}[^"\)]*\.a' "$f" 2>/dev/null | sed "s|\${_IMPORT_PREFIX}|$p|g"
+        done
+        grep -rhoE "$OPENCV_INSTALL_DIR[^\"\)]*\.a" "$OPENCV_INSTALL_DIR" 2>/dev/null
+    } | sort -u | while IFS= read -r lib; do
+        if [ ! -f "$lib" ]; then
+            mkdir -p "$(dirname "$lib")"
+            if [ -f "$_EMPTY_O" ]; then ar rcs "$lib" "$_EMPTY_O"; else touch "$lib"; fi
+            echo "placeholder: $lib"
+        fi
+    done
+    rm -f "$_EMPTY_O"
+fi
+
 # 编译 inksi_image for OHOS
 echo "Building inksi_image for OHOS arm64-v8a..."
 mkdir -p "$SCRIPT_DIR/build-ohos"

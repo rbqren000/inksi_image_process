@@ -37,9 +37,28 @@ INKSI_IMAGE_API InksiImageResult inksi_image_transparent_to_white(const uint8_t*
     int size = w * h * 4;
     uint8_t* out = (uint8_t*)malloc(size);
     if (!out) return make_error(INKSI_IMAGE_ERR_OUT_OF_MEMORY, "malloc failed");
+    // 透明区域是「无内容」，应落白底而不是保留原 RGB（通常为 0，即黑）。
+    // 2.0.1 及之前只把 alpha 置 255、RGB 原样透传，函数名与实际行为不符，
+    // 会让透明图在 Android / OHOS 上打出满屏黑点。
+    // 输入约定：非预乘 RGBA；算法与各端 ImageProcessor 的白底混合保持一致（截断取整）。
     for (int i = 0; i < size; i += 4) {
-        out[i] = data[i]; out[i+1] = data[i+1]; out[i+2] = data[i+2];
-        out[i+3] = 255;
+        const uint8_t r = data[i];
+        const uint8_t g = data[i + 1];
+        const uint8_t b = data[i + 2];
+        const uint8_t a = data[i + 3];
+        if (a == 0) {
+            out[i] = 255; out[i + 1] = 255; out[i + 2] = 255;
+        } else if (a == 255) {
+            out[i] = r; out[i + 1] = g; out[i + 2] = b;
+        } else {
+            // 整数混合，避免浮点截断差 1（a=128 时浮点版给出 126、数学值是 127）：
+            // out = (rgb * a + 255 * (255 - a)) / 255
+            const int inv = 255 - (int)a;
+            out[i]     = (uint8_t)(((int)r * a + 255 * inv) / 255);
+            out[i + 1] = (uint8_t)(((int)g * a + 255 * inv) / 255);
+            out[i + 2] = (uint8_t)(((int)b * a + 255 * inv) / 255);
+        }
+        out[i + 3] = 255;
     }
     return make_result(out, w, h, 4);
 }

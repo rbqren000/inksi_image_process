@@ -10,11 +10,14 @@
 // 2.0.1：行为修复——inksi_image_bitmap_to_rgb_bytes 由误输出的 B,G,R
 //        改为 R,G,B（与函数名、各端 ImageProcessor、halftone_min::rgb_to_gray 一致）。
 //        ABI 不变，但输出字节顺序变了，使用该函数的产物需重编。
+// 2.0.2：行为修复——inksi_image_transparent_to_white 由「只把 alpha 置 255、
+//        RGB 原样透传」改为真正的白底混合（a=0 输出 255）。此前实现与函数名不符，
+//        透明图在 Android / OHOS 上会打出满屏黑点。ABI 不变，链接方需重编。
 
 #define INKSI_IMAGE_VERSION_MAJOR 2
 #define INKSI_IMAGE_VERSION_MINOR 0
-#define INKSI_IMAGE_VERSION_PATCH 1
-#define INKSI_IMAGE_VERSION_STRING "2.0.1"
+#define INKSI_IMAGE_VERSION_PATCH 2
+#define INKSI_IMAGE_VERSION_STRING "2.0.2"
 
 #ifdef __cplusplus
 extern "C" {
@@ -65,7 +68,9 @@ INKSI_IMAGE_API void inksi_image_free_result(InksiImageResult* result);
 
 // ============ 图像预处理 ============
 
-/// 透明像素 → 白色
+/// 透明像素 → 白色：按 alpha 与白底混合，输出不透明 RGBA。
+/// 输入约定为非预乘 RGBA（各端解码后需先确认 alpha 状态）；
+/// 半透明像素按 `255*(1-a) + rgb*a` 混合，与各端 ImageProcessor 的实现一致。
 INKSI_IMAGE_API InksiImageResult inksi_image_transparent_to_white(const uint8_t* data, int w, int h);
 
 /// 缩放到指定高度（等比例）
